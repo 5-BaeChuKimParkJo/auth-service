@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum UserState {
+
     WITHDRAWAL_PENDING("탈퇴예정"),
     ACTIVE("활성화");
 

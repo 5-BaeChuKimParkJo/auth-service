@@ -6,5 +6,5 @@ import com.chalnakchalnak.authservice.application.port.in.dto.VerifyCodeRequestD
 public interface IdentityVerificationUseCase {
 
     void sendVerificationCode(SendVerificationCodeRequestDto sendVerificationCodeRequestDto);
-    boolean verifyCode(VerifyCodeRequestDto verifyCodeRequestDto);
+    Boolean verifyCode(VerifyCodeRequestDto verifyCodeRequestDto);
 }

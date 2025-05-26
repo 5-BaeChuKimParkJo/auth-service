@@ -28,7 +28,8 @@ public class IdentityVerificationService implements IdentityVerificationUseCase 
             throw new BaseException(BaseResponseStatus.SEND_LIMITED);
         }
 
-        final String verificationCode = String.valueOf((int)(Math.random() * 1_000_000) + 1_000_000).substring(1);
+        final String verificationCode =
+                String.valueOf((int)(Math.random() * 1_000_000) + 1_000_000).substring(1);
 
         smsPort.sendSms(sendVerificationCodeRequestDto.getPhoneNumber(), verificationCode);
         verificationCodeStorePort.saveCode(sendVerificationCodeRequestDto.getPhoneNumber(), verificationCode);
@@ -36,15 +37,16 @@ public class IdentityVerificationService implements IdentityVerificationUseCase 
 
     @Override
     @Transactional
-    public boolean verifyCode(VerifyCodeRequestDto verifyCodeRequestDto) {
-        final IdentityVerificationDomain identityVerificationDomain = identityVerificationDtoMapper.toDomain(verifyCodeRequestDto);
+    public Boolean verifyCode(VerifyCodeRequestDto verifyCodeRequestDto) {
+        final IdentityVerificationDomain identityVerificationDomain =
+                identityVerificationDtoMapper.toDomain(verifyCodeRequestDto);
         final String storedCode = verificationCodeStorePort.findCode(identityVerificationDomain.getPhoneNumber());
 
         if (storedCode == null) {
             throw new BaseException(BaseResponseStatus.EXPIRED_VERIFICATION_CODE);
         }
 
-        final boolean codeValid = identityVerificationDomain.verifyCode(storedCode);
+        final Boolean codeValid = identityVerificationDomain.verifyCode(storedCode);
 
         if (codeValid) {
             verificationCodeStorePort.deleteCode(identityVerificationDomain.getPhoneNumber());

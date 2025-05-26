@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class IdentityVerificationDomain {
+
     private String phoneNumber;
     private String verificationCode;
 
@@ -16,7 +17,7 @@ public class IdentityVerificationDomain {
         this.verificationCode = verificationCode;
     }
 
-    public boolean verifyCode(String storedCode) {
+    public Boolean verifyCode(String storedCode) {
         return this.verificationCode.equals(storedCode);
     }
 }

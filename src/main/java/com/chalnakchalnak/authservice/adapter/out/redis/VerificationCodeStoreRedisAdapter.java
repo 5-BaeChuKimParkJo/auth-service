@@ -26,7 +26,7 @@ public class VerificationCodeStoreRedisAdapter implements VerificationCodeStoreP
     }
 
     @Override
-    public boolean isSendLimited(String phoneNumber) {
+    public Boolean isSendLimited(String phoneNumber) {
         return Boolean.TRUE.equals(redisTemplate.hasKey(sendLimitKey(phoneNumber)));
     }
 
@@ -41,7 +41,7 @@ public class VerificationCodeStoreRedisAdapter implements VerificationCodeStoreP
     }
 
     @Override
-    public boolean hasGrantAccess(String purpose, String uuid) {
+    public Boolean hasGrantAccess(String purpose, String uuid) {
         return Boolean.TRUE.equals(redisTemplate.hasKey(grantKey(purpose, uuid)));
     }
 
@@ -62,5 +62,7 @@ public class VerificationCodeStoreRedisAdapter implements VerificationCodeStoreP
     private String codeKey(String phoneNumber) { return "sms:" + phoneNumber; }
     private String sendLimitKey(String phoneNumber) { return "sms:limit:" + phoneNumber; }
     private String attemptKey(String phoneNumber) { return "sms:attempt:" + phoneNumber; }
-    private String grantKey(String phoneNumber, String memberUuid) { return "sms:grant:" + phoneNumber + ":" + memberUuid; }
+    private String grantKey(String phoneNumber, String memberUuid) {
+        return "sms:grant:" + phoneNumber + ":" + memberUuid;
+    }
 }
