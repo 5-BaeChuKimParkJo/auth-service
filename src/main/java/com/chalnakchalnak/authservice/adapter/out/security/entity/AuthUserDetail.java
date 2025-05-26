@@ -1,5 +1,6 @@
 package com.chalnakchalnak.authservice.adapter.out.security.entity;
 
+import com.chalnakchalnak.authservice.adapter.out.persistence.mysql.entity.MemberEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,14 +15,13 @@ public class AuthUserDetail implements UserDetails {
     private String authUuid;
     private String userId;
     private String password;
-    private String email;
 
-//    public AuthUserDetail(AuthEntity authEntity) {
-//        this.authUuid = authEntity.getAuthUuid();
-//        this.userId = authEntity.getUserId();
-//        this.password = authEntity.getPassword();
-//        this.email = authEntity.getEmail();
-//    }
+
+    public AuthUserDetail(MemberEntity memberEntity) {
+        this.authUuid = memberEntity.getMemberUuid();
+        this.userId = memberEntity.getMemberId();
+        this.password = memberEntity.getPassword();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

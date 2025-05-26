@@ -1,4 +1,4 @@
-package com.chalnakchalnak.authservice.adapter.in.web.vo;
+package com.chalnakchalnak.authservice.adapter.in.web.vo.in;
 
 import com.chalnakchalnak.authservice.application.enums.IdentityVerificationPurpose;
 import jakarta.validation.constraints.NotBlank;

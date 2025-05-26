@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class AuthDomain {
+public class MemberDomain {
 
     private String memberUuid;
     private String memberId;
@@ -17,8 +17,8 @@ public class AuthDomain {
     private UserState state;
 
     @Builder
-    public AuthDomain(String memberUuid, String memberId, String password,
-                      String nickname, String phoneNumber, UserState state) {
+    public MemberDomain(String memberUuid, String memberId, String password,
+                        String nickname, String phoneNumber, UserState state) {
         this.memberUuid = memberUuid;
         this.memberId = memberId;
         this.password = password;

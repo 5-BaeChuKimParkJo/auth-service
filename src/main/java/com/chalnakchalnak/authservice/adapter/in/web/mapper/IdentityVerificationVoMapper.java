@@ -1,7 +1,7 @@
 package com.chalnakchalnak.authservice.adapter.in.web.mapper;
 
-import com.chalnakchalnak.authservice.adapter.in.web.vo.SendVerificationCodeRequestVo;
-import com.chalnakchalnak.authservice.adapter.in.web.vo.VerifyCodeRequestVo;
+import com.chalnakchalnak.authservice.adapter.in.web.vo.in.SendVerificationCodeRequestVo;
+import com.chalnakchalnak.authservice.adapter.in.web.vo.in.VerifyCodeRequestVo;
 import com.chalnakchalnak.authservice.application.port.in.dto.SendVerificationCodeRequestDto;
 import com.chalnakchalnak.authservice.application.port.in.dto.VerifyCodeRequestDto;
 import org.springframework.stereotype.Component;

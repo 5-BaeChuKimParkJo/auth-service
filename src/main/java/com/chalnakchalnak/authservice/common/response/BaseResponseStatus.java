@@ -15,6 +15,7 @@ public enum BaseResponseStatus {
     SUCCESS(HttpStatus.OK, true, 200, "요청에 성공하였습니다."),
     SUCCESS_SEND_VERIFICATION_CODE(HttpStatus.OK, true, 201, "인증번호 전송에 성공하였습니다."),
     SUCCESS_VERIFIED_CODE(HttpStatus.OK, true, 202, "인증번호가 일치합니다."),
+    SUCCESS_SIGN_UP(HttpStatus.OK, true, 203, "회원가입에 성공하였습니다."),
 
 
     /**
