@@ -25,7 +25,7 @@ tmp/
 *.iml
 *.ipr
 *.iws
-out/
+
 
 # 포함하고 싶은 팀 설정
 !.idea/codeStyles/
