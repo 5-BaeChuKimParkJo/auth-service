@@ -31,7 +31,7 @@ dependencies {
     //redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     //spring security
-//    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     //jwt
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.12.5'
     implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.12.5'
