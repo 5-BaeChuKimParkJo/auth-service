@@ -1,5 +1,6 @@
 package com.chalnakchalnak.authservice.adapter.out.redis;
 
+import com.chalnakchalnak.authservice.application.enums.IdentityVerificationPurpose;
 import com.chalnakchalnak.authservice.application.port.out.VerificationCodeStorePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -16,8 +17,7 @@ public class VerificationCodeStoreRedisAdapter implements VerificationCodeStoreP
     private static final Duration ATTEMPT_TTL = Duration.ofMinutes(5);
     private static final Duration GRANT_TTL = Duration.ofMinutes(10);
 
-    // 본인인증 SMS 관련 메서드
-
+    // Key-Value 저장
     @Override
     public void saveCode(String phoneNumber, String code) {
         redisTemplate.opsForValue().set(codeKey(phoneNumber), code, ATTEMPT_TTL);
@@ -25,8 +25,9 @@ public class VerificationCodeStoreRedisAdapter implements VerificationCodeStoreP
         redisTemplate.opsForValue().set(attemptKey(phoneNumber), "0", ATTEMPT_TTL);
     }
 
+    // SMS 전송
     @Override
-    public Boolean isSendLimited(String phoneNumber) {
+    public Boolean sendLimited(String phoneNumber) {
         return Boolean.TRUE.equals(redisTemplate.hasKey(sendLimitKey(phoneNumber)));
     }
 
@@ -36,13 +37,13 @@ public class VerificationCodeStoreRedisAdapter implements VerificationCodeStoreP
     }
 
     @Override
-    public void setGrantAccess(String purpose, String uuid) {
-        redisTemplate.opsForValue().set(grantKey(purpose, uuid), "true", GRANT_TTL);
+    public void setGrantAccess(String phoneNumber, String purpose) {
+        redisTemplate.opsForValue().set(grantKey(phoneNumber, purpose), "true", GRANT_TTL);
     }
 
     @Override
-    public Boolean hasGrantAccess(String purpose, String uuid) {
-        return Boolean.TRUE.equals(redisTemplate.hasKey(grantKey(purpose, uuid)));
+    public Boolean grantedAccess(String phoneNumber, String purpose) {
+        return Boolean.TRUE.equals(redisTemplate.hasKey(grantKey(phoneNumber, purpose)));
     }
 
     @Override
@@ -62,7 +63,7 @@ public class VerificationCodeStoreRedisAdapter implements VerificationCodeStoreP
     private String codeKey(String phoneNumber) { return "sms:" + phoneNumber; }
     private String sendLimitKey(String phoneNumber) { return "sms:limit:" + phoneNumber; }
     private String attemptKey(String phoneNumber) { return "sms:attempt:" + phoneNumber; }
-    private String grantKey(String phoneNumber, String memberUuid) {
-        return "sms:grant:" + phoneNumber + ":" + memberUuid;
+    private String grantKey(String phoneNumber, String purpose) {
+        return "sms:" + purpose + ":" + phoneNumber;
     }
 }

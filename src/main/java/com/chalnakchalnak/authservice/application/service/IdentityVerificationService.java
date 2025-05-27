@@ -24,7 +24,7 @@ public class IdentityVerificationService implements IdentityVerificationUseCase 
     @Override
     @Transactional
     public void sendVerificationCode(SendVerificationCodeRequestDto sendVerificationCodeRequestDto) {
-        if (verificationCodeStorePort.isSendLimited(sendVerificationCodeRequestDto.getPhoneNumber())) {
+        if (verificationCodeStorePort.sendLimited(sendVerificationCodeRequestDto.getPhoneNumber())) {
             throw new BaseException(BaseResponseStatus.SEND_LIMITED);
         }
 

@@ -46,7 +46,8 @@ public enum BaseResponseStatus {
     FAIL_VERIFIED_CODE(HttpStatus.BAD_REQUEST, false, 2001, "인증번호가 일치하지 않습니다."),
     SEND_LIMITED(HttpStatus.TOO_MANY_REQUESTS, false, 2002, "인증코드 발송은 3분에 1회 가능합니다. 잠시 후 다시 시도해주세요."),
     VERIFICATION_LIMITED(HttpStatus.TOO_MANY_REQUESTS, false, 2003, "5회 실패하여 인증코드가 만료되었습니다. 다시 인증코드를 요청해주세요."),
-    FAILED_TO_LOGIN(HttpStatus.UNAUTHORIZED, false, 2010, "아이디 또는 패스워드를 다시 확인하세요.");
+    FAILED_TO_LOGIN(HttpStatus.UNAUTHORIZED, false, 2010, "아이디 또는 패스워드를 다시 확인하세요."),
+    SIGN_UP_NOT_VERIFIED(HttpStatus.BAD_REQUEST, false, 2020, "회원가입을 위해 본인인증을 진행해주세요.");
 
 
     private final HttpStatusCode httpStatusCode;
