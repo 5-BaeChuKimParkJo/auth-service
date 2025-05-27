@@ -3,6 +3,9 @@ package com.chalnakchalnak.authservice.application.service;
 import com.chalnakchalnak.authservice.application.enums.IdentityVerificationPurpose;
 import com.chalnakchalnak.authservice.application.mapper.AuthMapper;
 import com.chalnakchalnak.authservice.application.port.in.AuthUseCase;
+import com.chalnakchalnak.authservice.application.port.in.dto.in.ExistsByMemberIdRequestDto;
+import com.chalnakchalnak.authservice.application.port.in.dto.in.ExistsByNicknameRequestDto;
+import com.chalnakchalnak.authservice.application.port.in.dto.in.ExistsByPhoneNumberRequestDto;
 import com.chalnakchalnak.authservice.application.port.in.dto.in.SignUpRequestDto;
 import com.chalnakchalnak.authservice.application.port.out.AuthRepositoryPort;
 import com.chalnakchalnak.authservice.application.port.out.AuthSecurityPort;
@@ -49,5 +52,19 @@ public class AuthService implements AuthUseCase {
 
     }
 
+    @Override
+    public Boolean existsByMemberId(ExistsByMemberIdRequestDto existsMemberIdRequestDto) {
+        return authRepositoryPort.existsByMemberId(existsMemberIdRequestDto.getMemberId());
+    }
+
+    @Override
+    public Boolean existsByNickname(ExistsByNicknameRequestDto existsNicknameRequestDto) {
+        return authRepositoryPort.existsByNickname(existsNicknameRequestDto.getNickname());
+    }
+
+    @Override
+    public Boolean existsByPhoneNumber(ExistsByPhoneNumberRequestDto existsPhoneNumberRequestDto) {
+        return authRepositoryPort.existsByPhoneNumber(existsPhoneNumberRequestDto.getPhoneNumber());
+    }
 
 }
