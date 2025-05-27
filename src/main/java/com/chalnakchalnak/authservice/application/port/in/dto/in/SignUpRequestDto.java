@@ -1,0 +1,23 @@
+package com.chalnakchalnak.authservice.application.port.in.dto.in;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor
+public class SignUpRequestDto {
+
+    private String memberId;
+    private String password;
+    private String nickname;
+    private String phoneNumber;
+
+    @Builder
+    public SignUpRequestDto(String memberId, String password, String nickname, String phoneNumber) {
+        this.memberId = memberId;
+        this.password = password;
+        this.nickname = nickname;
+        this.phoneNumber = phoneNumber;
+    }
+}

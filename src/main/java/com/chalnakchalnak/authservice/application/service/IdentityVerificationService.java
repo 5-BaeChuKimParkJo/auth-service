@@ -2,8 +2,8 @@ package com.chalnakchalnak.authservice.application.service;
 
 import com.chalnakchalnak.authservice.application.mapper.IdentityVerificationDtoMapper;
 import com.chalnakchalnak.authservice.application.port.in.IdentityVerificationUseCase;
-import com.chalnakchalnak.authservice.application.port.in.dto.SendVerificationCodeRequestDto;
-import com.chalnakchalnak.authservice.application.port.in.dto.VerifyCodeRequestDto;
+import com.chalnakchalnak.authservice.application.port.in.dto.in.SendVerificationCodeRequestDto;
+import com.chalnakchalnak.authservice.application.port.in.dto.in.VerifyCodeRequestDto;
 import com.chalnakchalnak.authservice.application.port.out.SmsPort;
 import com.chalnakchalnak.authservice.application.port.out.VerificationCodeStorePort;
 import com.chalnakchalnak.authservice.common.exception.BaseException;
@@ -39,7 +39,7 @@ public class IdentityVerificationService implements IdentityVerificationUseCase 
     @Transactional
     public Boolean verifyCode(VerifyCodeRequestDto verifyCodeRequestDto) {
         final IdentityVerificationDomain identityVerificationDomain =
-                identityVerificationDtoMapper.toDomain(verifyCodeRequestDto);
+                identityVerificationDtoMapper.toIdentityVerificationDomain(verifyCodeRequestDto);
         final String storedCode = verificationCodeStorePort.findCode(identityVerificationDomain.getPhoneNumber());
 
         if (storedCode == null) {
@@ -49,16 +49,19 @@ public class IdentityVerificationService implements IdentityVerificationUseCase 
         final Boolean codeValid = identityVerificationDomain.verifyCode(storedCode);
 
         if (codeValid) {
-            verificationCodeStorePort.deleteCode(identityVerificationDomain.getPhoneNumber());
-            verificationCodeStorePort.deleteAttemptVerification(identityVerificationDomain.getPhoneNumber());
+
         } else {
             if (verificationCodeStorePort.increaseVerifyAttempt(identityVerificationDomain.getPhoneNumber()) >= 5) {
-                verificationCodeStorePort.deleteCode(identityVerificationDomain.getPhoneNumber());
-                verificationCodeStorePort.deleteAttemptVerification(identityVerificationDomain.getPhoneNumber());
+                deleteVerificationCode(identityVerificationDomain.getPhoneNumber());
                 throw new BaseException(BaseResponseStatus.VERIFICATION_LIMITED);
             }
         }
 
         return codeValid;
+    }
+
+    public void deleteVerificationCode(String phoneNumber) {
+        verificationCodeStorePort.deleteCode(phoneNumber);
+        verificationCodeStorePort.deleteAttemptVerification(phoneNumber);
     }
 }

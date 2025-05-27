@@ -1,4 +1,4 @@
-package com.chalnakchalnak.authservice.application.port.in.dto;
+package com.chalnakchalnak.authservice.application.port.in.dto.in;
 
 import com.chalnakchalnak.authservice.application.enums.IdentityVerificationPurpose;
 import lombok.Builder;
@@ -7,20 +7,17 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class VerifyCodeRequestDto {
+public class SendVerificationCodeRequestDto {
 
     private String phoneNumber;
-    private String verificationCode;
     private IdentityVerificationPurpose purpose;
 
     @Builder
-    public VerifyCodeRequestDto(
+    public SendVerificationCodeRequestDto(
             String phoneNumber,
-            String verificationCode,
             IdentityVerificationPurpose purpose
     ) {
         this.phoneNumber = phoneNumber;
-        this.verificationCode = verificationCode;
         this.purpose = purpose;
     }
 }

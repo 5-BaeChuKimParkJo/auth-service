@@ -1,7 +1,7 @@
 package com.chalnakchalnak.authservice.adapter.in.web.mapper;
 
 import com.chalnakchalnak.authservice.adapter.in.web.vo.in.SignUpRequestVo;
-import com.chalnakchalnak.authservice.application.port.in.dto.SignUpRequestDto;
+import com.chalnakchalnak.authservice.application.port.in.dto.in.SignUpRequestDto;
 import org.springframework.stereotype.Component;
 
 @Component
