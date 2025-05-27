@@ -37,6 +37,9 @@ public enum BaseResponseStatus {
      * 1000: Request 유효성 에러
      */
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, false, 1000, "잘못된 요청입니다."),
+    DUPLICATED_MEMBER_ID(HttpStatus.BAD_REQUEST, false, 1001, "이미 존재하는 아이디입니다."),
+    DUPLICATED_NICKNAME(HttpStatus.BAD_REQUEST, false, 1002, "이미 존재하는 닉네임입니다."),
+    DUPLICATED_PHONE_NUMBER(HttpStatus.BAD_REQUEST, false, 1003, "이미 존재하는 휴대폰 번호입니다."),
 
 
     /**

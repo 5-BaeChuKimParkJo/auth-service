@@ -21,7 +21,7 @@ public class AuthService implements AuthUseCase {
     private final AuthRepositoryPort authRepositoryPort;
     private final AuthSecurityPort authSecurityPort;
     private final GenerateUuidPort generateUuidPort;
-    private VerificationCodeStorePort verificationCodeStorePort;
+    private final VerificationCodeStorePort verificationCodeStorePort;
     private final AuthMapper authMapper;
 
     @Override
@@ -29,6 +29,14 @@ public class AuthService implements AuthUseCase {
 
         if (verificationCodeStorePort.grantedAccess(signUpRequestDto.getPhoneNumber(), IdentityVerificationPurpose.SIGN_UP.toString())) {
             throw new BaseException(BaseResponseStatus.SIGN_UP_NOT_VERIFIED);
+        }
+
+        if(authRepositoryPort.existsByMemberId(signUpRequestDto.getMemberId())){
+            throw new BaseException(BaseResponseStatus.DUPLICATED_MEMBER_ID);
+        } else if (authRepositoryPort.existsByNickname(signUpRequestDto.getNickname())){
+            throw new BaseException(BaseResponseStatus.DUPLICATED_NICKNAME);
+        } else if (authRepositoryPort.existsByPhoneNumber(signUpRequestDto.getPhoneNumber())){
+            throw new BaseException(BaseResponseStatus.DUPLICATED_PHONE_NUMBER);
         }
 
         MemberDomain memberDomain = authMapper.toMemberDomain(

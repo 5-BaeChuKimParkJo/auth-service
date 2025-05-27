@@ -17,4 +17,19 @@ public class AuthRepository implements AuthRepositoryPort {
     public void save(SignUpDto signUpDto) {
         authJpaRepository.save(authEntityMapper.toEntity(signUpDto));
     }
+
+    @Override
+    public Boolean existsByMemberId(String memberId) {
+        return authJpaRepository.existsByMemberId(memberId);
+    }
+
+    @Override
+    public Boolean existsByNickname(String nickname) {
+        return authJpaRepository.existsByNickname(nickname);
+    }
+
+    @Override
+    public Boolean existsByPhoneNumber(String phoneNumber) {
+        return authJpaRepository.existsByPhoneNumber(phoneNumber);
+    }
 }
