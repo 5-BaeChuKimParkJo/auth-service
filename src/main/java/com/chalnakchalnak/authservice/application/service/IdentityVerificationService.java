@@ -60,6 +60,7 @@ public class IdentityVerificationService implements IdentityVerificationUseCase 
         return codeValid;
     }
 
+    @Transactional
     public void deleteVerificationCode(String phoneNumber) {
         verificationCodeStorePort.deleteCode(phoneNumber);
         verificationCodeStorePort.deleteAttemptVerification(phoneNumber);

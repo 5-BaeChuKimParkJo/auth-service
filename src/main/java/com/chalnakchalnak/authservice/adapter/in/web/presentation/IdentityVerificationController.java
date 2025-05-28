@@ -22,7 +22,7 @@ public class IdentityVerificationController {
     private final IdentityVerificationVoMapper identityVerificationVoMapper;
 
     @PostMapping("/sms/send")
-    public BaseResponseEntity sendVerificationCode(
+    public BaseResponseEntity<Void> sendVerificationCode(
             @RequestBody @Valid SendVerificationCodeRequestVo sendVerificationCodeRequestVo
     ) {
 
@@ -34,7 +34,7 @@ public class IdentityVerificationController {
     }
 
     @PostMapping("/sms/verify")
-    public BaseResponseEntity verifyCode(
+    public BaseResponseEntity<Boolean> verifyCode(
             @RequestBody @Valid VerifyCodeRequestVo verifyCodeRequestVo
     ) {
 

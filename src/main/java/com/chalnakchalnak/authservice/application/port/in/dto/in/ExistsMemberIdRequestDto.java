@@ -4,12 +4,12 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class ExistsByMemberIdRequestDto {
+public class ExistsMemberIdRequestDto {
 
     private String memberId;
 
     @Builder
-    public ExistsByMemberIdRequestDto(String memberId) {
+    public ExistsMemberIdRequestDto(String memberId) {
         this.memberId = memberId;
     }
 }

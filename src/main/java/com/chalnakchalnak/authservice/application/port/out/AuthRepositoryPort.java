@@ -6,6 +6,6 @@ public interface AuthRepositoryPort {
 
     void save(SignUpDto signUpDto);
     Boolean existsByMemberId(String memberId);
-    Boolean existsByNickname(String nickname);
+//    Boolean existsByNickname(String nickname);
     Boolean existsByPhoneNumber(String phoneNumber);
 }

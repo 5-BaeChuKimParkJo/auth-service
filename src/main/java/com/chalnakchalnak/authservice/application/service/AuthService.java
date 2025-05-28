@@ -2,18 +2,20 @@ package com.chalnakchalnak.authservice.application.service;
 
 import com.chalnakchalnak.authservice.application.enums.IdentityVerificationPurpose;
 import com.chalnakchalnak.authservice.application.mapper.AuthMapper;
+import com.chalnakchalnak.authservice.application.mapper.feign.MemberMapper;
 import com.chalnakchalnak.authservice.application.port.in.AuthUseCase;
-import com.chalnakchalnak.authservice.application.port.in.dto.in.ExistsByMemberIdRequestDto;
-import com.chalnakchalnak.authservice.application.port.in.dto.in.ExistsByNicknameRequestDto;
-import com.chalnakchalnak.authservice.application.port.in.dto.in.ExistsByPhoneNumberRequestDto;
+import com.chalnakchalnak.authservice.application.port.in.dto.in.ExistsMemberIdRequestDto;
+import com.chalnakchalnak.authservice.application.port.in.dto.in.ExistsPhoneNumberRequestDto;
 import com.chalnakchalnak.authservice.application.port.in.dto.in.SignUpRequestDto;
 import com.chalnakchalnak.authservice.application.port.out.AuthRepositoryPort;
 import com.chalnakchalnak.authservice.application.port.out.AuthSecurityPort;
 import com.chalnakchalnak.authservice.application.port.out.GenerateUuidPort;
 import com.chalnakchalnak.authservice.application.port.out.VerificationCodeStorePort;
+import com.chalnakchalnak.authservice.application.port.out.feign.member.MemberServicePort;
 import com.chalnakchalnak.authservice.common.exception.BaseException;
 import com.chalnakchalnak.authservice.common.response.BaseResponseStatus;
-import com.chalnakchalnak.authservice.domain.model.MemberDomain;
+import com.chalnakchalnak.authservice.domain.model.AuthDomain;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,44 +28,51 @@ public class AuthService implements AuthUseCase {
     private final GenerateUuidPort generateUuidPort;
     private final VerificationCodeStorePort verificationCodeStorePort;
     private final AuthMapper authMapper;
+//    private final MemberServicePort memberServicePort;
+//    private final MemberMapper memberMapper;
 
     @Override
+    @Transactional
     public void signUp(SignUpRequestDto signUpRequestDto) {
 
-        if (verificationCodeStorePort.grantedAccess(signUpRequestDto.getPhoneNumber(), IdentityVerificationPurpose.SIGN_UP.toString())) {
+        if (verificationCodeStorePort.grantedAccess(
+                signUpRequestDto.getPhoneNumber(), IdentityVerificationPurpose.SIGN_UP.toString())
+        ) {
             throw new BaseException(BaseResponseStatus.SIGN_UP_NOT_VERIFIED);
         }
 
-        if(authRepositoryPort.existsByMemberId(signUpRequestDto.getMemberId())){
+        if(authRepositoryPort.existsByMemberId(signUpRequestDto.getMemberId())) {
             throw new BaseException(BaseResponseStatus.DUPLICATED_MEMBER_ID);
-        } else if (authRepositoryPort.existsByNickname(signUpRequestDto.getNickname())){
-            throw new BaseException(BaseResponseStatus.DUPLICATED_NICKNAME);
-        } else if (authRepositoryPort.existsByPhoneNumber(signUpRequestDto.getPhoneNumber())){
+//        } else if (memberServicePort.existsNickname(signUpRequestDto.getNickname())) {
+//            throw new BaseException(BaseResponseStatus.DUPLICATED_NICKNAME);
+        } else if (authRepositoryPort.existsByPhoneNumber(signUpRequestDto.getPhoneNumber())) {
             throw new BaseException(BaseResponseStatus.DUPLICATED_PHONE_NUMBER);
         }
 
-        MemberDomain memberDomain = authMapper.toMemberDomain(
+        AuthDomain authDomain = authMapper.toMemberDomain(
                 signUpRequestDto,
                 generateUuidPort.generateUuid(),
                 authSecurityPort.encryptPassword(signUpRequestDto.getPassword())
         );
 
-        authRepositoryPort.save(authMapper.toSignUpDto(memberDomain));
+        authRepositoryPort.save(authMapper.toSignUpDto(authDomain));
 
+        // member-service로 member 생성 요청 (feign client)
+//        memberServicePort.createMember(memberMapper.toCreateMemberRequestDto(authDomain));
     }
 
     @Override
-    public Boolean existsByMemberId(ExistsByMemberIdRequestDto existsMemberIdRequestDto) {
+    public Boolean existsMemberId(ExistsMemberIdRequestDto existsMemberIdRequestDto) {
         return authRepositoryPort.existsByMemberId(existsMemberIdRequestDto.getMemberId());
     }
 
-    @Override
-    public Boolean existsByNickname(ExistsByNicknameRequestDto existsNicknameRequestDto) {
-        return authRepositoryPort.existsByNickname(existsNicknameRequestDto.getNickname());
-    }
+//    @Override
+//    public Boolean existsNickname(ExistsNicknameRequestDto existsNicknameRequestDto) {
+//        return authRepositoryPort.existsByNickname(existsNicknameRequestDto.getNickname());
+//    }
 
     @Override
-    public Boolean existsByPhoneNumber(ExistsByPhoneNumberRequestDto existsPhoneNumberRequestDto) {
+    public Boolean existsPhoneNumber(ExistsPhoneNumberRequestDto existsPhoneNumberRequestDto) {
         return authRepositoryPort.existsByPhoneNumber(existsPhoneNumberRequestDto.getPhoneNumber());
     }
 

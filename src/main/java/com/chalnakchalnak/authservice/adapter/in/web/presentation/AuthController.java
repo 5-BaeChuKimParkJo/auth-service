@@ -3,8 +3,12 @@ package com.chalnakchalnak.authservice.adapter.in.web.presentation;
 
 import com.chalnakchalnak.authservice.adapter.in.common.entity.BaseResponseEntity;
 import com.chalnakchalnak.authservice.adapter.in.web.mapper.AuthVoMapper;
+import com.chalnakchalnak.authservice.adapter.in.web.vo.in.ExistsMemberIdRequestVo;
+import com.chalnakchalnak.authservice.adapter.in.web.vo.in.ExistsNicknameRequestVo;
+import com.chalnakchalnak.authservice.adapter.in.web.vo.in.ExistsPhoneNumberRequestVo;
 import com.chalnakchalnak.authservice.adapter.in.web.vo.in.SignUpRequestVo;
 import com.chalnakchalnak.authservice.application.port.in.AuthUseCase;
+import com.chalnakchalnak.authservice.application.port.in.dto.in.ExistsNicknameRequestDto;
 import com.chalnakchalnak.authservice.common.response.BaseResponseStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +27,39 @@ public class AuthController {
 
     @PostMapping("/sign-up")
     public BaseResponseEntity<Void> signUp(@RequestBody @Valid SignUpRequestVo signUpRequestVo) {
+
         authUseCase.signUp(authVoMapper.toSignUpRequestDto(signUpRequestVo));
 
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS_SIGN_UP);
+    }
+
+    @PostMapping("/exists/member-id")
+    public BaseResponseEntity<Boolean> existsMemberId(
+            @RequestBody @Valid ExistsMemberIdRequestVo existsMemberIdRequestVo
+    ) {
+
+        return new BaseResponseEntity<>(
+                authUseCase.existsMemberId(authVoMapper.toExistsMemberIdRequestDto(existsMemberIdRequestVo))
+        );
+    }
+
+//    @PostMapping("/exists/nickname")
+//    public BaseResponseEntity<Boolean> existsNickname(
+//            @RequestBody @Valid ExistsNicknameRequestVo existsNicknameRequestVo
+//    ) {
+//
+//        return new BaseResponseEntity<>(authUseCase.existsNickname(
+//                authVoMapper.toExistsNicknameRequestDto(existsNicknameRequestVo))
+//        );
+//    }
+
+    @PostMapping("/exists/phone-number")
+    public BaseResponseEntity<Boolean> existsPhoneNumber(
+            @RequestBody @Valid ExistsPhoneNumberRequestVo existsPhoneNumberRequestVo
+    ) {
+
+        return new BaseResponseEntity<>(
+                authUseCase.existsPhoneNumber(authVoMapper.toExistsPhoneNumberRequestDto(existsPhoneNumberRequestVo))
+        );
     }
 }

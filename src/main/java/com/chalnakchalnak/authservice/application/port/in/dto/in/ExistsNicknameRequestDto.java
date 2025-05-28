@@ -4,12 +4,12 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class ExistsByNicknameRequestDto {
+public class ExistsNicknameRequestDto {
 
     private String nickname;
 
     @Builder
-    public ExistsByNicknameRequestDto(String nickname) {
+    public ExistsNicknameRequestDto(String nickname) {
         this.nickname = nickname;
     }
 }

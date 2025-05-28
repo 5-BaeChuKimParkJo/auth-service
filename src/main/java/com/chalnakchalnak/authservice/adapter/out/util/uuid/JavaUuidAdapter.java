@@ -1,4 +1,4 @@
-package com.chalnakchalnak.authservice.adapter.out.uuid;
+package com.chalnakchalnak.authservice.adapter.out.util.uuid;
 
 import com.chalnakchalnak.authservice.application.port.out.GenerateUuidPort;
 import org.springframework.stereotype.Component;

@@ -23,10 +23,10 @@ public class AuthRepository implements AuthRepositoryPort {
         return authJpaRepository.existsByMemberId(memberId);
     }
 
-    @Override
-    public Boolean existsByNickname(String nickname) {
-        return authJpaRepository.existsByNickname(nickname);
-    }
+//    @Override
+//    public Boolean existsByNickname(String nickname) {
+//        return authJpaRepository.existsByNickname(nickname);
+//    }
 
     @Override
     public Boolean existsByPhoneNumber(String phoneNumber) {
