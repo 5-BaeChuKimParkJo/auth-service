@@ -11,6 +11,7 @@ public class IdentityVerificationDtoMapper {
         return IdentityVerificationDomain.builder()
                 .phoneNumber(verifyCodeRequestDto.getPhoneNumber())
                 .verificationCode(verifyCodeRequestDto.getVerificationCode())
+                .purpose(verifyCodeRequestDto.getPurpose())
                 .build();
     }
 }

@@ -1,6 +1,5 @@
 package com.chalnakchalnak.authservice.adapter.out.redis;
 
-import com.chalnakchalnak.authservice.application.enums.IdentityVerificationPurpose;
 import com.chalnakchalnak.authservice.application.port.out.VerificationCodeStorePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;

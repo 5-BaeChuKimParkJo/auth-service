@@ -1,6 +1,6 @@
 package com.chalnakchalnak.authservice.adapter.in.web.vo.in;
 
-import com.chalnakchalnak.authservice.application.enums.IdentityVerificationPurpose;
+import com.chalnakchalnak.authservice.domain.model.enums.IdentityVerificationPurpose;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;

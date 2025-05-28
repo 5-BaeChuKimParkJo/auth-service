@@ -1,5 +1,6 @@
 package com.chalnakchalnak.authservice.adapter.out.security.config;
 
+import com.chalnakchalnak.authservice.application.service.AuthUserDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 public class ApplicationConfig {
 
-//    private final AuthUserDetailService authUserDetailService;
+    private final AuthUserDetailService authUserDetailService;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
@@ -29,7 +30,7 @@ public class ApplicationConfig {
     @Bean
     public AuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-//        daoAuthenticationProvider.setUserDetailsService(authUserDetailService);
+        daoAuthenticationProvider.setUserDetailsService(authUserDetailService);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         return daoAuthenticationProvider;
     }

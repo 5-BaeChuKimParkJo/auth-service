@@ -1,8 +1,7 @@
 package com.chalnakchalnak.authservice.application.service;
 
-import com.chalnakchalnak.authservice.application.enums.IdentityVerificationPurpose;
+import com.chalnakchalnak.authservice.domain.model.enums.IdentityVerificationPurpose;
 import com.chalnakchalnak.authservice.application.mapper.AuthMapper;
-import com.chalnakchalnak.authservice.application.mapper.feign.MemberMapper;
 import com.chalnakchalnak.authservice.application.port.in.AuthUseCase;
 import com.chalnakchalnak.authservice.application.port.in.dto.in.ExistsMemberIdRequestDto;
 import com.chalnakchalnak.authservice.application.port.in.dto.in.ExistsPhoneNumberRequestDto;
@@ -11,7 +10,6 @@ import com.chalnakchalnak.authservice.application.port.out.AuthRepositoryPort;
 import com.chalnakchalnak.authservice.application.port.out.AuthSecurityPort;
 import com.chalnakchalnak.authservice.application.port.out.GenerateUuidPort;
 import com.chalnakchalnak.authservice.application.port.out.VerificationCodeStorePort;
-import com.chalnakchalnak.authservice.application.port.out.feign.member.MemberServicePort;
 import com.chalnakchalnak.authservice.common.exception.BaseException;
 import com.chalnakchalnak.authservice.common.response.BaseResponseStatus;
 import com.chalnakchalnak.authservice.domain.model.AuthDomain;
@@ -35,7 +33,7 @@ public class AuthService implements AuthUseCase {
     @Transactional
     public void signUp(SignUpRequestDto signUpRequestDto) {
 
-        if (verificationCodeStorePort.grantedAccess(
+        if (!verificationCodeStorePort.grantedAccess(
                 signUpRequestDto.getPhoneNumber(), IdentityVerificationPurpose.SIGN_UP.toString())
         ) {
             throw new BaseException(BaseResponseStatus.SIGN_UP_NOT_VERIFIED);

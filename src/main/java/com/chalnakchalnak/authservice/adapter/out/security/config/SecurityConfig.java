@@ -24,14 +24,14 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authorizeRequests -> authorizeRequests
-                                .anyRequest().permitAll()
-//                                .requestMatchers(
+                                .requestMatchers(
+                                        "/**"
 //                                        "/api/v1/auth/**",
 //                                        "/swagger-ui/**",
 //                                        "/v3/api-docs/**",
 //                                        "/error"
-//                                )
-//                                .permitAll()
+                                )
+                                .permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )

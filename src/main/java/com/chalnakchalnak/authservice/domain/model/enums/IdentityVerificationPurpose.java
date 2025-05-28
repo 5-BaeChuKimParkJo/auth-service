@@ -1,4 +1,4 @@
-package com.chalnakchalnak.authservice.application.enums;
+package com.chalnakchalnak.authservice.domain.model.enums;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

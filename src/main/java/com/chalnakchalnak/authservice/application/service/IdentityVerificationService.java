@@ -49,7 +49,11 @@ public class IdentityVerificationService implements IdentityVerificationUseCase 
         final Boolean codeValid = identityVerificationDomain.verifyCode(storedCode);
 
         if (codeValid) {
-
+            verificationCodeStorePort.setGrantAccess(
+                    identityVerificationDomain.getPhoneNumber(),
+                    identityVerificationDomain.getPurpose().toString()
+            );
+            deleteVerificationCode(identityVerificationDomain.getPhoneNumber());
         } else {
             if (verificationCodeStorePort.increaseVerifyAttempt(identityVerificationDomain.getPhoneNumber()) >= 5) {
                 deleteVerificationCode(identityVerificationDomain.getPhoneNumber());
