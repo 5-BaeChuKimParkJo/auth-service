@@ -1,11 +1,14 @@
 package com.chalnakchalnak.authservice.application.service;
 
+import com.chalnakchalnak.authservice.application.port.dto.in.SignInRequestDto;
+import com.chalnakchalnak.authservice.application.port.dto.out.AuthResponseDto;
+import com.chalnakchalnak.authservice.application.port.dto.out.SignInResponseDto;
 import com.chalnakchalnak.authservice.domain.model.enums.IdentityVerificationPurpose;
 import com.chalnakchalnak.authservice.application.mapper.AuthMapper;
 import com.chalnakchalnak.authservice.application.port.in.AuthUseCase;
-import com.chalnakchalnak.authservice.application.port.in.dto.in.ExistsMemberIdRequestDto;
-import com.chalnakchalnak.authservice.application.port.in.dto.in.ExistsPhoneNumberRequestDto;
-import com.chalnakchalnak.authservice.application.port.in.dto.in.SignUpRequestDto;
+import com.chalnakchalnak.authservice.application.port.dto.in.ExistsMemberIdRequestDto;
+import com.chalnakchalnak.authservice.application.port.dto.in.ExistsPhoneNumberRequestDto;
+import com.chalnakchalnak.authservice.application.port.dto.in.SignUpRequestDto;
 import com.chalnakchalnak.authservice.application.port.out.AuthRepositoryPort;
 import com.chalnakchalnak.authservice.application.port.out.AuthSecurityPort;
 import com.chalnakchalnak.authservice.application.port.out.GenerateUuidPort;
@@ -47,7 +50,7 @@ public class AuthService implements AuthUseCase {
             throw new BaseException(BaseResponseStatus.DUPLICATED_PHONE_NUMBER);
         }
 
-        AuthDomain authDomain = authMapper.toMemberDomain(
+        AuthDomain authDomain = authMapper.toAuthDomain(
                 signUpRequestDto,
                 generateUuidPort.generateUuid(),
                 authSecurityPort.encryptPassword(signUpRequestDto.getPassword())
@@ -72,6 +75,19 @@ public class AuthService implements AuthUseCase {
     @Override
     public Boolean existsPhoneNumber(ExistsPhoneNumberRequestDto existsPhoneNumberRequestDto) {
         return authRepositoryPort.existsByPhoneNumber(existsPhoneNumberRequestDto.getPhoneNumber());
+    }
+
+    @Override
+    public SignInResponseDto signIn(SignInRequestDto authSignInRequestDto) {
+        AuthResponseDto authResponseDto = authRepositoryPort.findByMemberId(authSignInRequestDto.getMemberId()).orElseThrow(
+                () -> new BaseException(BaseResponseStatus.USER_NOT_FOUND)
+        );
+
+        AuthDomain authDomain = authMapper.toAuthDomain(authResponseDto);
+
+        return authSecurityPort.signIn(
+                authMapper.toSignInDto(authDomain), authSignInRequestDto.getPassword()
+        );
     }
 
 }

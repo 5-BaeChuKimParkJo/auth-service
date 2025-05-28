@@ -1,4 +1,4 @@
-package com.chalnakchalnak.authservice.application.port.in.dto.out;
+package com.chalnakchalnak.authservice.application.port.dto.out;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -2,8 +2,8 @@ package com.chalnakchalnak.authservice.application.service;
 
 import com.chalnakchalnak.authservice.application.mapper.IdentityVerificationDtoMapper;
 import com.chalnakchalnak.authservice.application.port.in.IdentityVerificationUseCase;
-import com.chalnakchalnak.authservice.application.port.in.dto.in.SendVerificationCodeRequestDto;
-import com.chalnakchalnak.authservice.application.port.in.dto.in.VerifyCodeRequestDto;
+import com.chalnakchalnak.authservice.application.port.dto.in.SendVerificationCodeRequestDto;
+import com.chalnakchalnak.authservice.application.port.dto.in.VerifyCodeRequestDto;
 import com.chalnakchalnak.authservice.application.port.out.SmsPort;
 import com.chalnakchalnak.authservice.application.port.out.VerificationCodeStorePort;
 import com.chalnakchalnak.authservice.common.exception.BaseException;

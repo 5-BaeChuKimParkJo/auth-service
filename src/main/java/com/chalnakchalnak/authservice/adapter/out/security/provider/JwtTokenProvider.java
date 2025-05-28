@@ -57,7 +57,7 @@ public class JwtTokenProvider {
     /**
      * 3. 액세스 토큰 생성
      */
-    public String generateAccessToken(String role) {
+    public String generateAccessToken(String role, String memberUuid) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() +
                 Objects.requireNonNull(env.getProperty("JWT.token.access-expire-time", Long.class),
@@ -67,6 +67,7 @@ public class JwtTokenProvider {
                 .signWith(getSignKey())
                 .claim("token_type", "access")
                 .claim("role", role)
+                .claim("memberUuid", memberUuid)
                 .issuedAt(now)
                 .expiration(expiration)
                 .compact();
@@ -75,7 +76,7 @@ public class JwtTokenProvider {
     /**
      * 4. 리프레시 토큰 생성
      */
-    public String generateRefreshToken(String role) {
+    public String generateRefreshToken(String role, String memberUuid) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() +
                 Objects.requireNonNull(env.getProperty("JWT.token.refresh-expire-time", Long.class),
@@ -85,6 +86,7 @@ public class JwtTokenProvider {
                 .signWith(getSignKey())
                 .claim("token_type", "refresh")
                 .claim("role", role)
+                .claim("memberUuid", memberUuid)
                 .issuedAt(now)
                 .expiration(expiration)
                 .compact();

@@ -1,7 +1,7 @@
 package com.chalnakchalnak.authservice.application.port.out;
 
-import com.chalnakchalnak.authservice.application.port.in.dto.SignUpDto;
-import com.chalnakchalnak.authservice.application.port.in.dto.out.AuthResponseDto;
+import com.chalnakchalnak.authservice.application.port.dto.SignUpDto;
+import com.chalnakchalnak.authservice.application.port.dto.out.AuthResponseDto;
 
 import java.util.Optional;
 

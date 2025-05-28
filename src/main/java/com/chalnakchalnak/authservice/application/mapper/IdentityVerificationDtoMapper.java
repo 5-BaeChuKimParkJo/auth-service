@@ -1,6 +1,6 @@
 package com.chalnakchalnak.authservice.application.mapper;
 
-import com.chalnakchalnak.authservice.application.port.in.dto.in.VerifyCodeRequestDto;
+import com.chalnakchalnak.authservice.application.port.dto.in.VerifyCodeRequestDto;
 import com.chalnakchalnak.authservice.domain.model.IdentityVerificationDomain;
 import org.springframework.stereotype.Component;
 

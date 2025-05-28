@@ -3,12 +3,9 @@ package com.chalnakchalnak.authservice.adapter.in.web.presentation;
 
 import com.chalnakchalnak.authservice.adapter.in.common.entity.BaseResponseEntity;
 import com.chalnakchalnak.authservice.adapter.in.web.mapper.AuthVoMapper;
-import com.chalnakchalnak.authservice.adapter.in.web.vo.in.ExistsMemberIdRequestVo;
-import com.chalnakchalnak.authservice.adapter.in.web.vo.in.ExistsNicknameRequestVo;
-import com.chalnakchalnak.authservice.adapter.in.web.vo.in.ExistsPhoneNumberRequestVo;
-import com.chalnakchalnak.authservice.adapter.in.web.vo.in.SignUpRequestVo;
+import com.chalnakchalnak.authservice.adapter.in.web.vo.in.*;
+import com.chalnakchalnak.authservice.adapter.in.web.vo.out.SignInResponseVo;
 import com.chalnakchalnak.authservice.application.port.in.AuthUseCase;
-import com.chalnakchalnak.authservice.application.port.in.dto.in.ExistsNicknameRequestDto;
 import com.chalnakchalnak.authservice.common.response.BaseResponseStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -60,6 +57,16 @@ public class AuthController {
 
         return new BaseResponseEntity<>(
                 authUseCase.existsPhoneNumber(authVoMapper.toExistsPhoneNumberRequestDto(existsPhoneNumberRequestVo))
+        );
+    }
+
+    @PostMapping("sign-in")
+    public BaseResponseEntity<SignInResponseVo> signIn(
+            @RequestBody @Valid SignInRequestVo signInRequestVo
+            ) {
+
+        return new BaseResponseEntity<>(
+                authVoMapper.toSignInResponseVo(authUseCase.signIn(authVoMapper.toSignInRequestDto(signInRequestVo)))
         );
     }
 }

@@ -1,9 +1,5 @@
 package com.chalnakchalnak.authservice.application.mapper.feign;
 
-import com.chalnakchalnak.authservice.application.port.in.dto.feign.member.CreateMemberRequestDto;
-import com.chalnakchalnak.authservice.domain.model.AuthDomain;
-import org.springframework.stereotype.Component;
-
 //@Component
 public class MemberMapper {
 

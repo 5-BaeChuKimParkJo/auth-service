@@ -1,4 +1,4 @@
-package com.chalnakchalnak.authservice.application.port.in.dto.feign.member;
+package com.chalnakchalnak.authservice.application.port.dto.feign.member;
 
 import lombok.Builder;
 import lombok.Getter;

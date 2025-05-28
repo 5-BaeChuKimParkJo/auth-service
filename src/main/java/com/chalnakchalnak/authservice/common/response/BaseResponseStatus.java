@@ -32,6 +32,7 @@ public enum BaseResponseStatus {
     SSE_SEND_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, false, 901, "알림 전송에 실패하였습니다."),
     FAILED_SEND_SMS(HttpStatus.INTERNAL_SERVER_ERROR, false, 902, "SMS 전송에 실패하였습니다."),
     LOGIN_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, false, 903, "로그인에 실패하였습니다."),
+    USER_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, false, 904, "존재하지 않는 유저입니다."),
 
     /**
      * 1000: Request 유효성 에러

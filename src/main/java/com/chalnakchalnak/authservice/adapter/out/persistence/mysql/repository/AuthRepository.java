@@ -1,8 +1,8 @@
 package com.chalnakchalnak.authservice.adapter.out.persistence.mysql.repository;
 
 import com.chalnakchalnak.authservice.adapter.out.persistence.mysql.mapper.AuthEntityMapper;
-import com.chalnakchalnak.authservice.application.port.in.dto.SignUpDto;
-import com.chalnakchalnak.authservice.application.port.in.dto.out.AuthResponseDto;
+import com.chalnakchalnak.authservice.application.port.dto.SignUpDto;
+import com.chalnakchalnak.authservice.application.port.dto.out.AuthResponseDto;
 import com.chalnakchalnak.authservice.application.port.out.AuthRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

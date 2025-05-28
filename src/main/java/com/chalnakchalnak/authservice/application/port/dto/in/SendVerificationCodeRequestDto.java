@@ -1,24 +1,21 @@
-package com.chalnakchalnak.authservice.application.port.in.dto.in;
+package com.chalnakchalnak.authservice.application.port.dto.in;
 
 import com.chalnakchalnak.authservice.domain.model.enums.IdentityVerificationPurpose;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class VerifyCodeRequestDto {
+public class SendVerificationCodeRequestDto {
 
     private String phoneNumber;
-    private String verificationCode;
     private IdentityVerificationPurpose purpose;
 
     @Builder
-    public VerifyCodeRequestDto(
+    public SendVerificationCodeRequestDto(
             String phoneNumber,
-            String verificationCode,
             IdentityVerificationPurpose purpose
     ) {
         this.phoneNumber = phoneNumber;
-        this.verificationCode = verificationCode;
         this.purpose = purpose;
     }
 }
