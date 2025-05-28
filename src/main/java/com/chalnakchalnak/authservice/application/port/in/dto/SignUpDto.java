@@ -1,4 +1,4 @@
-package com.chalnakchalnak.authservice.domain.model;
+package com.chalnakchalnak.authservice.application.port.in.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -6,21 +6,19 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class AuthDomain {
+public class SignUpDto {
 
     private String memberUuid;
     private String memberId;
     private String password;
-    private String nickname;
     private String phoneNumber;
 
     @Builder
-    public AuthDomain(String memberUuid, String memberId, String password,
-                      String nickname, String phoneNumber) {
+    public SignUpDto(String memberUuid, String memberId, String password, String phoneNumber) {
         this.memberUuid = memberUuid;
         this.memberId = memberId;
         this.password = password;
-        this.nickname = nickname;
         this.phoneNumber = phoneNumber;
     }
+
 }

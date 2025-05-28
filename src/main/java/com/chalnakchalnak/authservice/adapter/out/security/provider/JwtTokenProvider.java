@@ -60,7 +60,8 @@ public class JwtTokenProvider {
     public String generateAccessToken(String role) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() +
-                Objects.requireNonNull(env.getProperty("JWT.token.access-expire-time", Long.class), "JWT.token.access-expire-time is missing"));
+                Objects.requireNonNull(env.getProperty("JWT.token.access-expire-time", Long.class),
+                        "JWT.token.access-expire-time is missing"));
 
         return Jwts.builder()
                 .signWith(getSignKey())
@@ -77,7 +78,8 @@ public class JwtTokenProvider {
     public String generateRefreshToken(String role) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() +
-                Objects.requireNonNull(env.getProperty("JWT.token.refresh-expire-time", Long.class), "JWT.token.refresh-expire-time is missing"));
+                Objects.requireNonNull(env.getProperty("JWT.token.refresh-expire-time", Long.class),
+                        "JWT.token.refresh-expire-time is missing"));
 
         return Jwts.builder()
                 .signWith(getSignKey())

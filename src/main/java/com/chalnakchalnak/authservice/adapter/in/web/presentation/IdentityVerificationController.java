@@ -1,8 +1,8 @@
 package com.chalnakchalnak.authservice.adapter.in.web.presentation;
 
 import com.chalnakchalnak.authservice.adapter.in.web.mapper.IdentityVerificationVoMapper;
-import com.chalnakchalnak.authservice.adapter.in.web.vo.SendVerificationCodeRequestVo;
-import com.chalnakchalnak.authservice.adapter.in.web.vo.VerifyCodeRequestVo;
+import com.chalnakchalnak.authservice.adapter.in.web.vo.in.SendVerificationCodeRequestVo;
+import com.chalnakchalnak.authservice.adapter.in.web.vo.in.VerifyCodeRequestVo;
 import com.chalnakchalnak.authservice.application.port.in.IdentityVerificationUseCase;
 import com.chalnakchalnak.authservice.adapter.in.common.entity.BaseResponseEntity;
 import com.chalnakchalnak.authservice.common.response.BaseResponseStatus;
@@ -22,7 +22,7 @@ public class IdentityVerificationController {
     private final IdentityVerificationVoMapper identityVerificationVoMapper;
 
     @PostMapping("/sms/send")
-    public BaseResponseEntity sendVerificationCode(
+    public BaseResponseEntity<Void> sendVerificationCode(
             @RequestBody @Valid SendVerificationCodeRequestVo sendVerificationCodeRequestVo
     ) {
 
@@ -34,7 +34,7 @@ public class IdentityVerificationController {
     }
 
     @PostMapping("/sms/verify")
-    public BaseResponseEntity verifyCode(
+    public BaseResponseEntity<Boolean> verifyCode(
             @RequestBody @Valid VerifyCodeRequestVo verifyCodeRequestVo
     ) {
 

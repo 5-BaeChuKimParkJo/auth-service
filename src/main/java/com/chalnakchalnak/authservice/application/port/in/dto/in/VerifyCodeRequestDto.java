@@ -1,4 +1,4 @@
-package com.chalnakchalnak.authservice.application.port.in.dto;
+package com.chalnakchalnak.authservice.application.port.in.dto.in;
 
 import com.chalnakchalnak.authservice.application.enums.IdentityVerificationPurpose;
 import lombok.Builder;
@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 public class VerifyCodeRequestDto {
 
     private String phoneNumber;
