@@ -1,4 +1,4 @@
-package com.chalnakchalnak.authservice.application.port.in.dto.in;
+package com.chalnakchalnak.authservice.application.port.dto.in;
 
 import lombok.Builder;
 import lombok.Getter;

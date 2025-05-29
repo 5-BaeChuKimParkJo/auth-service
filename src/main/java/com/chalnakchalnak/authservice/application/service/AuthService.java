@@ -1,22 +1,20 @@
 package com.chalnakchalnak.authservice.application.service;
 
-import com.chalnakchalnak.authservice.application.enums.IdentityVerificationPurpose;
+import com.chalnakchalnak.authservice.application.port.dto.SignOutDto;
+import com.chalnakchalnak.authservice.application.port.dto.in.*;
+import com.chalnakchalnak.authservice.application.port.dto.out.AuthResponseDto;
+import com.chalnakchalnak.authservice.application.port.dto.out.SignInResponseDto;
+import com.chalnakchalnak.authservice.application.port.out.*;
+import com.chalnakchalnak.authservice.domain.model.enums.IdentityVerificationPurpose;
 import com.chalnakchalnak.authservice.application.mapper.AuthMapper;
-import com.chalnakchalnak.authservice.application.mapper.feign.MemberMapper;
 import com.chalnakchalnak.authservice.application.port.in.AuthUseCase;
-import com.chalnakchalnak.authservice.application.port.in.dto.in.ExistsMemberIdRequestDto;
-import com.chalnakchalnak.authservice.application.port.in.dto.in.ExistsPhoneNumberRequestDto;
-import com.chalnakchalnak.authservice.application.port.in.dto.in.SignUpRequestDto;
-import com.chalnakchalnak.authservice.application.port.out.AuthRepositoryPort;
-import com.chalnakchalnak.authservice.application.port.out.AuthSecurityPort;
-import com.chalnakchalnak.authservice.application.port.out.GenerateUuidPort;
-import com.chalnakchalnak.authservice.application.port.out.VerificationCodeStorePort;
-import com.chalnakchalnak.authservice.application.port.out.feign.member.MemberServicePort;
 import com.chalnakchalnak.authservice.common.exception.BaseException;
 import com.chalnakchalnak.authservice.common.response.BaseResponseStatus;
 import com.chalnakchalnak.authservice.domain.model.AuthDomain;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,6 +25,7 @@ public class AuthService implements AuthUseCase {
     private final AuthSecurityPort authSecurityPort;
     private final GenerateUuidPort generateUuidPort;
     private final VerificationCodeStorePort verificationCodeStorePort;
+    private final TokenStorePort tokenStorePort;
     private final AuthMapper authMapper;
 //    private final MemberServicePort memberServicePort;
 //    private final MemberMapper memberMapper;
@@ -35,7 +34,7 @@ public class AuthService implements AuthUseCase {
     @Transactional
     public void signUp(SignUpRequestDto signUpRequestDto) {
 
-        if (verificationCodeStorePort.grantedAccess(
+        if (!verificationCodeStorePort.grantedAccess(
                 signUpRequestDto.getPhoneNumber(), IdentityVerificationPurpose.SIGN_UP.toString())
         ) {
             throw new BaseException(BaseResponseStatus.SIGN_UP_NOT_VERIFIED);
@@ -49,7 +48,7 @@ public class AuthService implements AuthUseCase {
             throw new BaseException(BaseResponseStatus.DUPLICATED_PHONE_NUMBER);
         }
 
-        AuthDomain authDomain = authMapper.toMemberDomain(
+        AuthDomain authDomain = authMapper.toAuthDomain(
                 signUpRequestDto,
                 generateUuidPort.generateUuid(),
                 authSecurityPort.encryptPassword(signUpRequestDto.getPassword())
@@ -76,4 +75,53 @@ public class AuthService implements AuthUseCase {
         return authRepositoryPort.existsByPhoneNumber(existsPhoneNumberRequestDto.getPhoneNumber());
     }
 
+    @Override
+    @Transactional
+    public SignInResponseDto signIn(SignInRequestDto authSignInRequestDto) {
+        final AuthResponseDto authResponseDto =
+                authRepositoryPort.findByMemberId(authSignInRequestDto.getMemberId())
+                        .orElseThrow(() -> new BaseException(BaseResponseStatus.USER_NOT_FOUND)
+        );
+
+        final AuthDomain authDomain = authMapper.toAuthDomain(authResponseDto);
+
+        final SignInResponseDto signInResponseDto = authSecurityPort.signIn(
+                authMapper.toSignInDto(authDomain), authSignInRequestDto.getPassword()
+        );
+
+        tokenStorePort.saveRefreshToken(
+                authMapper.toStoreRefreshTokenDto(authDomain.getMemberUuid(), signInResponseDto.getRefreshToken())
+        );
+
+        return signInResponseDto;
+    }
+
+    @Override
+    @Transactional
+    public SignInResponseDto reissueAllToken(ReissueAllTokenRequestDto reissueAllTokenRequestDto) {
+        final String memberUuid = authSecurityPort.getMemberUuidByToken(reissueAllTokenRequestDto.getRefreshToken());
+
+        if (!tokenStorePort.getRefreshToken(memberUuid)
+                .equals(reissueAllTokenRequestDto.getRefreshToken())
+        ) {
+            System.out.println("refresh" + tokenStorePort.getRefreshToken(memberUuid));
+            throw  new BaseException(BaseResponseStatus.INVALID_REFRESH_TOKEN);
+        }
+
+        final SignInResponseDto tokens = authSecurityPort.generateAllToken(memberUuid);
+
+        tokenStorePort.saveRefreshToken(authMapper.toStoreRefreshTokenDto(memberUuid, tokens.getRefreshToken()));
+
+        return tokens;
+    }
+
+    @Override
+    @Transactional
+    public void signOut(SignOutDto signOutDto) {
+        try {
+            final String memberUuid = authSecurityPort.getMemberUuidByToken(signOutDto.getRefreshToken());
+
+            tokenStorePort.deleteRefreshToken(memberUuid);
+        } catch (BaseException e) { }
+    }
 }

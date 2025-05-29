@@ -8,4 +8,5 @@ public interface AuthJpaRepository extends JpaRepository<AuthEntity, String> {
     Boolean existsByMemberId(String memberId);
 //    Boolean existsByNickname(String nickname);
     Boolean existsByPhoneNumber(String phoneNumber);
+    AuthEntity findByMemberId(String memberId);
 }

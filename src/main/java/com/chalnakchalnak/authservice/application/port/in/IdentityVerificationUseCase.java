@@ -1,7 +1,7 @@
 package com.chalnakchalnak.authservice.application.port.in;
 
-import com.chalnakchalnak.authservice.application.port.in.dto.in.SendVerificationCodeRequestDto;
-import com.chalnakchalnak.authservice.application.port.in.dto.in.VerifyCodeRequestDto;
+import com.chalnakchalnak.authservice.application.port.dto.in.SendVerificationCodeRequestDto;
+import com.chalnakchalnak.authservice.application.port.dto.in.VerifyCodeRequestDto;
 
 public interface IdentityVerificationUseCase {
 

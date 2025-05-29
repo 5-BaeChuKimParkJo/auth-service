@@ -2,8 +2,8 @@ package com.chalnakchalnak.authservice.application.service;
 
 import com.chalnakchalnak.authservice.application.mapper.IdentityVerificationDtoMapper;
 import com.chalnakchalnak.authservice.application.port.in.IdentityVerificationUseCase;
-import com.chalnakchalnak.authservice.application.port.in.dto.in.SendVerificationCodeRequestDto;
-import com.chalnakchalnak.authservice.application.port.in.dto.in.VerifyCodeRequestDto;
+import com.chalnakchalnak.authservice.application.port.dto.in.SendVerificationCodeRequestDto;
+import com.chalnakchalnak.authservice.application.port.dto.in.VerifyCodeRequestDto;
 import com.chalnakchalnak.authservice.application.port.out.SmsPort;
 import com.chalnakchalnak.authservice.application.port.out.VerificationCodeStorePort;
 import com.chalnakchalnak.authservice.common.exception.BaseException;
@@ -49,7 +49,11 @@ public class IdentityVerificationService implements IdentityVerificationUseCase 
         final Boolean codeValid = identityVerificationDomain.verifyCode(storedCode);
 
         if (codeValid) {
-
+            verificationCodeStorePort.setGrantAccess(
+                    identityVerificationDomain.getPhoneNumber(),
+                    identityVerificationDomain.getPurpose().toString()
+            );
+            deleteVerificationCode(identityVerificationDomain.getPhoneNumber());
         } else {
             if (verificationCodeStorePort.increaseVerifyAttempt(identityVerificationDomain.getPhoneNumber()) >= 5) {
                 deleteVerificationCode(identityVerificationDomain.getPhoneNumber());

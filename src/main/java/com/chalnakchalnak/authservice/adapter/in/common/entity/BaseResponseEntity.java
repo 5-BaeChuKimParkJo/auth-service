@@ -1,12 +1,18 @@
 package com.chalnakchalnak.authservice.adapter.in.common.entity;
 
 import com.chalnakchalnak.authservice.common.response.BaseResponseStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 
-public record BaseResponseEntity<T>(@Schema(hidden = true) HttpStatusCode httpStatus,
-                                    Boolean isSuccess, String message, int code, T result) {
+public record BaseResponseEntity<T>(
+        @JsonIgnore
+        @Schema(hidden = true)
+        HttpStatusCode httpStatus,
+        @JsonIgnore
+        Boolean isSuccess,
+        String message, int code, T result) {
 
     /**
      * 필요값 : Http상태코드, 성공여부, 메시지, 에러코드, 결과값

@@ -1,10 +1,13 @@
 package com.chalnakchalnak.authservice.adapter.out.persistence.mysql.repository;
 
 import com.chalnakchalnak.authservice.adapter.out.persistence.mysql.mapper.AuthEntityMapper;
-import com.chalnakchalnak.authservice.application.port.in.dto.SignUpDto;
+import com.chalnakchalnak.authservice.application.port.dto.SignUpDto;
+import com.chalnakchalnak.authservice.application.port.dto.out.AuthResponseDto;
 import com.chalnakchalnak.authservice.application.port.out.AuthRepositoryPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -31,5 +34,10 @@ public class AuthRepository implements AuthRepositoryPort {
     @Override
     public Boolean existsByPhoneNumber(String phoneNumber) {
         return authJpaRepository.existsByPhoneNumber(phoneNumber);
+    }
+
+    @Override
+    public Optional<AuthResponseDto> findByMemberId(String memberId) {
+        return Optional.ofNullable(authEntityMapper.toAuthResponseDto(authJpaRepository.findByMemberId(memberId)));
     }
 }

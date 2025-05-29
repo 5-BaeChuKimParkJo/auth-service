@@ -1,9 +1,8 @@
-package com.chalnakchalnak.authservice.application.port.in.dto.in;
+package com.chalnakchalnak.authservice.application.port.dto.in;
 
-import com.chalnakchalnak.authservice.application.enums.IdentityVerificationPurpose;
+import com.chalnakchalnak.authservice.domain.model.enums.IdentityVerificationPurpose;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 public class VerifyCodeRequestDto {
