@@ -2,7 +2,6 @@ package com.chalnakchalnak.authservice.application.port.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
 public class SignInDto {

@@ -1,18 +1,18 @@
 package com.chalnakchalnak.authservice.common.exception;
 
-import com.chalnakchalnak.authservice.adapter.in.common.entity.BaseResponseEntity;
 import com.chalnakchalnak.authservice.common.response.BaseResponseStatus;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-//import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
+@Hidden
 @RestControllerAdvice
 @Slf4j
 public class BaseExceptionHandler {
@@ -22,28 +22,15 @@ public class BaseExceptionHandler {
      */
 
     @ExceptionHandler(BaseException.class)
-    protected ResponseEntity<BaseResponseEntity<Void>> BaseError(BaseException e) {
-        BaseResponseEntity<Void> response = new BaseResponseEntity<>(e.getStatus());
+    protected ResponseEntity<ExceptionResponseEntity<Void>> BaseError(BaseException e) {
+        ExceptionResponseEntity<Void> response = new ExceptionResponseEntity<>(e.getStatus());
         log.error("BaseException -> {}({})", e.getStatus(), e.getStatus().getMessage(), e);
         return new ResponseEntity<>(response, response.httpStatus());
     }
 
-    /**
-     * security 인증 에러
-     * 아이디가 없거나 비밀번호가 틀린 경우 AuthenticationManager 에서 발생
-     *
-     * @return FAILED_TO_LOGIN 에러 response
-     */
-    @ExceptionHandler(BadCredentialsException.class)
-    protected ResponseEntity<BaseResponseEntity<Void>> handleBadCredentialsException(BadCredentialsException e) {
-        BaseResponseEntity<Void> response = new BaseResponseEntity<>(BaseResponseStatus.FAILED_TO_LOGIN);
-        log.error("BadCredentialsException: ", e);
-        return new ResponseEntity<>(response, response.httpStatus());
-    }
-
     @ExceptionHandler(RuntimeException.class)
-    protected ResponseEntity<BaseResponseEntity<Void>> RuntimeError(RuntimeException e) {
-        BaseResponseEntity<Void> response = new BaseResponseEntity<>(BaseResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+    protected ResponseEntity<ExceptionResponseEntity<Void>> RuntimeError(RuntimeException e) {
+        ExceptionResponseEntity<Void> response = new ExceptionResponseEntity<>(BaseResponseStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         log.error("RuntimeException: ", e);
         for (StackTraceElement s : e.getStackTrace()) {
             System.out.println(s);
@@ -52,55 +39,58 @@ public class BaseExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<BaseResponseEntity<Void>> handleValidationException(MethodArgumentNotValidException e) {
-        BindingResult bindingResult = e.getBindingResult();
+    protected ResponseEntity<ExceptionResponseEntity<Void>> handleValidationException(MethodArgumentNotValidException e) {
+        log.warn("ValidationException: {}", e.getMessage());
 
-        FieldError fieldError = bindingResult.getFieldError();
-        String errorMessage = (fieldError != null)
-                ? String.format("%s : %s", fieldError.getField(), fieldError.getDefaultMessage())
-                : "잘못된 요청입니다.";
+        String errorCode = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
 
-        log.warn("Validation failed: {}", errorMessage);
+        BaseResponseStatus status;
 
-        BaseResponseEntity<Void> response = new BaseResponseEntity<>(
-                BaseResponseStatus.INVALID_REQUEST.getHttpStatusCode(),
-                false,
-                errorMessage,
-                BaseResponseStatus.INVALID_REQUEST.getCode(),
-                null
-        );
+        try {
+            status = BaseResponseStatus.valueOf(errorCode);
+        } catch (IllegalArgumentException ex) {
+            status = BaseResponseStatus.INVALID_INPUT; // 기본 fallback
+        }
+
+        ExceptionResponseEntity<Void> response = new ExceptionResponseEntity<>(status);
         return new ResponseEntity<>(response, response.httpStatus());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    protected ResponseEntity<BaseResponseEntity<Void>> handleJsonParseException(HttpMessageNotReadableException e) {
-        Throwable cause = e.getCause();
+    protected ResponseEntity<ExceptionResponseEntity<Void>> handleJsonParseException(HttpMessageNotReadableException e) {
+        log.warn("Json parsing error: {}", e.getMessage());
 
-        if (cause != null && cause.getMessage() != null && cause.getMessage().contains("java.time.LocalDate")) {
-            String errorMessage = "생년월일은 yyyy-mm-dd 형식이어야 합니다.";
-            log.warn("LocalDate parsing failed: {}", cause.getMessage());
-            return new ResponseEntity<>(
-                    new BaseResponseEntity<>(
-                            BaseResponseStatus.INVALID_REQUEST.getHttpStatusCode(),
-                            false,
-                            errorMessage,
-                            BaseResponseStatus.INVALID_REQUEST.getCode(),
-                            null
-                    ),
-                    BaseResponseStatus.INVALID_REQUEST.getHttpStatusCode()
-            );
+        // BaseException이 중첩돼 있는지 순회하면서 찾음
+        Throwable cause = e.getCause();
+        while (cause != null) {
+            if (cause instanceof BaseException baseEx) {
+                ExceptionResponseEntity<Void> response = new ExceptionResponseEntity<>(baseEx.getStatus());
+                return new ResponseEntity<>(response, response.httpStatus());
+            }
+
+            cause = cause.getCause();  // 깊이 파고들기
         }
 
-        return new ResponseEntity<>(
-                new BaseResponseEntity<>(
-                        BaseResponseStatus.INVALID_REQUEST.getHttpStatusCode(),
-                        false,
-                        "요청 형식이 올바르지 않습니다.",
-                        BaseResponseStatus.INVALID_REQUEST.getCode(),
-                        null
-                ),
-                BaseResponseStatus.INVALID_REQUEST.getHttpStatusCode()
-        );
+        // BaseException이 아닌 경우는 일반 INVALID_INPUT으로 처리
+        ExceptionResponseEntity<Void> response = new ExceptionResponseEntity<>(BaseResponseStatus.INVALID_INPUT);
+        return new ResponseEntity<>(response, response.httpStatus());
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionResponseEntity<Void>> handleAllExceptions(Exception ex) {
+        BaseResponseStatus status;
+
+        if (ex instanceof HttpRequestMethodNotSupportedException) {
+            status = BaseResponseStatus.METHOD_NOT_ALLOWED;
+        } else if (ex instanceof NoHandlerFoundException) {
+            status = BaseResponseStatus.NOT_FOUND;
+        } else if (ex instanceof MethodArgumentTypeMismatchException) {
+            status = BaseResponseStatus.BAD_REQUEST_INVALID_PARAM;
+        } else {
+            ex.printStackTrace(); // 서버 콘솔에 로그 출력
+            status = BaseResponseStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return new ResponseEntity<>(new ExceptionResponseEntity<>(status), status.getHttpStatusCode());
+    }
 }

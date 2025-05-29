@@ -13,8 +13,6 @@ import com.chalnakchalnak.authservice.common.response.BaseResponseStatus;
 import com.chalnakchalnak.authservice.domain.model.AuthDomain;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 @Service

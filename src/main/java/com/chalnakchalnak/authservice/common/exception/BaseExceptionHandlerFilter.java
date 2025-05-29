@@ -1,6 +1,5 @@
 package com.chalnakchalnak.authservice.common.exception;
 
-import com.chalnakchalnak.authservice.adapter.in.common.entity.BaseResponseEntity;
 import com.chalnakchalnak.authservice.common.response.BaseResponseStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
@@ -9,19 +8,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.security.sasl.AuthenticationException;
 import java.io.IOException;
 
 @Slf4j
 @Component
 public class BaseExceptionHandlerFilter extends OncePerRequestFilter {
     @Override
-    protected void doFilterInternal(
-            HttpServletRequest request, HttpServletResponse response, FilterChain filterChain
-    ) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
         } catch (BaseException e) {
@@ -40,7 +37,7 @@ public class BaseExceptionHandlerFilter extends OncePerRequestFilter {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        BaseResponseEntity baseResponse = new BaseResponseEntity(be.getStatus());
+        ExceptionResponseEntity baseResponse = new ExceptionResponseEntity(be.getStatus());
         try {
             response.getWriter().write(objectMapper.writeValueAsString(baseResponse));
         } catch (IOException e) {
