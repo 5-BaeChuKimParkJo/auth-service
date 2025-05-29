@@ -25,7 +25,7 @@ public class AuthController {
     }
 
     @Operation(summary = "Check Member ID API", description = "회원 아이디 중복 확인", tags = {"auth"})
-    @PostMapping("/exists/member-id/{memberId}")
+    @GetMapping("/exists/member-id/{memberId}")
     public Boolean existsMemberId(
             @PathVariable("memberId") String memberId
     ) {
@@ -33,7 +33,7 @@ public class AuthController {
         return authUseCase.existsMemberId(authVoMapper.toExistsMemberIdRequestDto(memberId));
     }
 
-//    @PostMapping("/exists/nickname")
+//    @GetMapping("/exists/nickname")
 //    public BaseResponseEntity<Boolean> existsNickname(
 //            @RequestBody @Valid ExistsNicknameRequestVo existsNicknameRequestVo
 //    ) {
@@ -44,7 +44,7 @@ public class AuthController {
 //    }
 
     @Operation(summary = "Check Nickname API", description = "닉네임 중복 확인", tags = {"auth"})
-    @PostMapping("/exists/phone-number/{phoneNumber}")
+    @GetMapping("/exists/phone-number/{phoneNumber}")
     public Boolean existsPhoneNumber(
             @PathVariable("phoneNumber") String phoneNumber
     ) {
