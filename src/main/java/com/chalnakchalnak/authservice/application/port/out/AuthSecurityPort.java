@@ -7,4 +7,6 @@ public interface AuthSecurityPort {
 
     String encryptPassword(String password);
     SignInResponseDto signIn(SignInDto signInDto, String inputPassword);
+    String getMemberUuidByToken(String token);
+    SignInResponseDto generateAllToken(String memberUuid);
 }

@@ -1,9 +1,7 @@
 package com.chalnakchalnak.authservice.application.port.in;
 
-import com.chalnakchalnak.authservice.application.port.dto.in.ExistsMemberIdRequestDto;
-import com.chalnakchalnak.authservice.application.port.dto.in.ExistsPhoneNumberRequestDto;
-import com.chalnakchalnak.authservice.application.port.dto.in.SignInRequestDto;
-import com.chalnakchalnak.authservice.application.port.dto.in.SignUpRequestDto;
+import com.chalnakchalnak.authservice.application.port.dto.SignOutDto;
+import com.chalnakchalnak.authservice.application.port.dto.in.*;
 import com.chalnakchalnak.authservice.application.port.dto.out.SignInResponseDto;
 
 public interface AuthUseCase {
@@ -13,4 +11,6 @@ public interface AuthUseCase {
 //    Boolean existsNickname(ExistsNicknameRequestDto existsNicknameRequestDto);
     Boolean existsPhoneNumber(ExistsPhoneNumberRequestDto existsPhoneNumberRequestDto);
     SignInResponseDto signIn(SignInRequestDto authSignInRequestDto);
+    SignInResponseDto reissueAllToken(ReissueAllTokenRequestDto reissueAllTokenRequestDto);
+    void signOut(SignOutDto signOutDto);
 }

@@ -2,10 +2,8 @@ package com.chalnakchalnak.authservice.adapter.in.web.mapper;
 
 import com.chalnakchalnak.authservice.adapter.in.web.vo.in.*;
 import com.chalnakchalnak.authservice.adapter.in.web.vo.out.SignInResponseVo;
-import com.chalnakchalnak.authservice.application.port.dto.in.ExistsMemberIdRequestDto;
-import com.chalnakchalnak.authservice.application.port.dto.in.ExistsPhoneNumberRequestDto;
-import com.chalnakchalnak.authservice.application.port.dto.in.SignInRequestDto;
-import com.chalnakchalnak.authservice.application.port.dto.in.SignUpRequestDto;
+import com.chalnakchalnak.authservice.application.port.dto.SignOutDto;
+import com.chalnakchalnak.authservice.application.port.dto.in.*;
 import com.chalnakchalnak.authservice.application.port.dto.out.SignInResponseDto;
 import org.springframework.stereotype.Component;
 
@@ -21,9 +19,9 @@ public class AuthVoMapper {
                 .build();
     }
 
-    public ExistsMemberIdRequestDto toExistsMemberIdRequestDto(ExistsMemberIdRequestVo existsMemberIdRequestVo) {
+    public ExistsMemberIdRequestDto toExistsMemberIdRequestDto(String MemberId) {
         return ExistsMemberIdRequestDto.builder()
-                .memberId(existsMemberIdRequestVo.getMemberId())
+                .memberId(MemberId)
                 .build();
     }
 
@@ -33,9 +31,9 @@ public class AuthVoMapper {
 //                .build();
 //    }
 
-    public ExistsPhoneNumberRequestDto toExistsPhoneNumberRequestDto(ExistsPhoneNumberRequestVo existsPhoneNumberRequestVo) {
+    public ExistsPhoneNumberRequestDto toExistsPhoneNumberRequestDto(String phoneNumber) {
         return ExistsPhoneNumberRequestDto.builder()
-                .phoneNumber(existsPhoneNumberRequestVo.getPhoneNumber())
+                .phoneNumber(phoneNumber)
                 .build();
     }
 
@@ -53,4 +51,15 @@ public class AuthVoMapper {
                 .build();
     }
 
+    public ReissueAllTokenRequestDto toReissueAllTokenRequestDto(String refreshToken) {
+        return ReissueAllTokenRequestDto.builder()
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    public SignOutDto toSignOutDto(String refreshToken) {
+        return SignOutDto.builder()
+                .refreshToken(refreshToken)
+                .build();
+    }
 }

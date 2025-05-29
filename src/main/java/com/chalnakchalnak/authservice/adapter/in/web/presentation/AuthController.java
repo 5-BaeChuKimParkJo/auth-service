@@ -9,10 +9,7 @@ import com.chalnakchalnak.authservice.application.port.in.AuthUseCase;
 import com.chalnakchalnak.authservice.common.response.BaseResponseStatus;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -30,13 +27,13 @@ public class AuthController {
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS_SIGN_UP);
     }
 
-    @PostMapping("/exists/member-id")
+    @PostMapping("/exists/member-id/{memberId}")
     public BaseResponseEntity<Boolean> existsMemberId(
-            @RequestBody @Valid ExistsMemberIdRequestVo existsMemberIdRequestVo
+            @PathVariable("memberId") String memberId
     ) {
 
         return new BaseResponseEntity<>(
-                authUseCase.existsMemberId(authVoMapper.toExistsMemberIdRequestDto(existsMemberIdRequestVo))
+                authUseCase.existsMemberId(authVoMapper.toExistsMemberIdRequestDto(memberId))
         );
     }
 
@@ -50,17 +47,17 @@ public class AuthController {
 //        );
 //    }
 
-    @PostMapping("/exists/phone-number")
+    @PostMapping("/exists/phone-number/{phoneNumber}")
     public BaseResponseEntity<Boolean> existsPhoneNumber(
-            @RequestBody @Valid ExistsPhoneNumberRequestVo existsPhoneNumberRequestVo
+            @PathVariable("phoneNumber") String phoneNumber
     ) {
 
         return new BaseResponseEntity<>(
-                authUseCase.existsPhoneNumber(authVoMapper.toExistsPhoneNumberRequestDto(existsPhoneNumberRequestVo))
+                authUseCase.existsPhoneNumber(authVoMapper.toExistsPhoneNumberRequestDto(phoneNumber))
         );
     }
 
-    @PostMapping("sign-in")
+    @PostMapping("/sign-in")
     public BaseResponseEntity<SignInResponseVo> signIn(
             @RequestBody @Valid SignInRequestVo signInRequestVo
             ) {
@@ -68,5 +65,26 @@ public class AuthController {
         return new BaseResponseEntity<>(
                 authVoMapper.toSignInResponseVo(authUseCase.signIn(authVoMapper.toSignInRequestDto(signInRequestVo)))
         );
+    }
+
+    @GetMapping("/reissue")
+    public BaseResponseEntity<SignInResponseVo> reissueAllToken(
+            @RequestHeader("Authorization") String refreshToken
+    ) {
+
+        return new BaseResponseEntity<>(
+                authVoMapper.toSignInResponseVo(authUseCase.reissueAllToken(
+                        authVoMapper.toReissueAllTokenRequestDto(refreshToken.substring(7))))
+        );
+    }
+
+    @GetMapping("/sign-out")
+    public BaseResponseEntity<Void> signOut(
+            @RequestHeader("Authorization") String refreshToken
+    ) {
+
+        authUseCase.signOut(authVoMapper.toSignOutDto(refreshToken.substring(7)));
+
+        return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS_SIGN_OUT);
     }
 }

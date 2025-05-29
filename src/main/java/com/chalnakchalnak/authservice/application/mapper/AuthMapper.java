@@ -2,6 +2,7 @@ package com.chalnakchalnak.authservice.application.mapper;
 
 import com.chalnakchalnak.authservice.application.port.dto.SignInDto;
 import com.chalnakchalnak.authservice.application.port.dto.SignUpDto;
+import com.chalnakchalnak.authservice.application.port.dto.StoreRefreshTokenDto;
 import com.chalnakchalnak.authservice.application.port.dto.in.SignUpRequestDto;
 import com.chalnakchalnak.authservice.application.port.dto.out.AuthResponseDto;
 import com.chalnakchalnak.authservice.application.port.dto.out.SignInResponseDto;
@@ -51,6 +52,13 @@ public class AuthMapper {
     public SignInResponseDto toSignInResponseDto(String accessToken, String refreshToken) {
         return SignInResponseDto.builder()
                 .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    public StoreRefreshTokenDto toStoreRefreshTokenDto(String memberUuid, String refreshToken) {
+        return StoreRefreshTokenDto.builder()
+                .memberUuid(memberUuid)
                 .refreshToken(refreshToken)
                 .build();
     }

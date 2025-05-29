@@ -5,6 +5,7 @@ import com.chalnakchalnak.authservice.application.mapper.AuthMapper;
 import com.chalnakchalnak.authservice.application.port.dto.SignInDto;
 import com.chalnakchalnak.authservice.application.port.dto.out.SignInResponseDto;
 import com.chalnakchalnak.authservice.application.port.out.AuthSecurityPort;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,6 +27,7 @@ public class AuthSecurityAdapter implements AuthSecurityPort {
     }
 
     @Override
+    @Transactional
     public SignInResponseDto signIn(SignInDto signInDto, String inputPassword) {
         if(authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -33,13 +35,24 @@ public class AuthSecurityAdapter implements AuthSecurityPort {
                         inputPassword
                 )
         ).isAuthenticated()) {
-            return authMapper.toSignInResponseDto(
-                    jwtTokenProvider.generateAccessToken("member", signInDto.getMemberUuid()),
-                    jwtTokenProvider.generateRefreshToken("member", signInDto.getMemberUuid())
-            );
+
+            return generateAllToken(signInDto.getMemberUuid());
         } else {
             throw new RuntimeException("Failed to login");
         }
     }
 
+    @Override
+    public String getMemberUuidByToken(String token) {
+        return jwtTokenProvider.extractMemberUuid(token);
+    }
+
+    @Override
+    public SignInResponseDto generateAllToken(String memberUuid) {
+
+        return authMapper.toSignInResponseDto(
+                jwtTokenProvider.generateAccessToken("member", memberUuid),
+                jwtTokenProvider.generateRefreshToken("member", memberUuid)
+        );
+    }
 }

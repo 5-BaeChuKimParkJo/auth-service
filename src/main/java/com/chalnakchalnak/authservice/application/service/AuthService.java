@@ -1,23 +1,20 @@
 package com.chalnakchalnak.authservice.application.service;
 
-import com.chalnakchalnak.authservice.application.port.dto.in.SignInRequestDto;
+import com.chalnakchalnak.authservice.application.port.dto.SignOutDto;
+import com.chalnakchalnak.authservice.application.port.dto.in.*;
 import com.chalnakchalnak.authservice.application.port.dto.out.AuthResponseDto;
 import com.chalnakchalnak.authservice.application.port.dto.out.SignInResponseDto;
+import com.chalnakchalnak.authservice.application.port.out.*;
 import com.chalnakchalnak.authservice.domain.model.enums.IdentityVerificationPurpose;
 import com.chalnakchalnak.authservice.application.mapper.AuthMapper;
 import com.chalnakchalnak.authservice.application.port.in.AuthUseCase;
-import com.chalnakchalnak.authservice.application.port.dto.in.ExistsMemberIdRequestDto;
-import com.chalnakchalnak.authservice.application.port.dto.in.ExistsPhoneNumberRequestDto;
-import com.chalnakchalnak.authservice.application.port.dto.in.SignUpRequestDto;
-import com.chalnakchalnak.authservice.application.port.out.AuthRepositoryPort;
-import com.chalnakchalnak.authservice.application.port.out.AuthSecurityPort;
-import com.chalnakchalnak.authservice.application.port.out.GenerateUuidPort;
-import com.chalnakchalnak.authservice.application.port.out.VerificationCodeStorePort;
 import com.chalnakchalnak.authservice.common.exception.BaseException;
 import com.chalnakchalnak.authservice.common.response.BaseResponseStatus;
 import com.chalnakchalnak.authservice.domain.model.AuthDomain;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,6 +25,7 @@ public class AuthService implements AuthUseCase {
     private final AuthSecurityPort authSecurityPort;
     private final GenerateUuidPort generateUuidPort;
     private final VerificationCodeStorePort verificationCodeStorePort;
+    private final TokenStorePort tokenStorePort;
     private final AuthMapper authMapper;
 //    private final MemberServicePort memberServicePort;
 //    private final MemberMapper memberMapper;
@@ -78,16 +76,52 @@ public class AuthService implements AuthUseCase {
     }
 
     @Override
+    @Transactional
     public SignInResponseDto signIn(SignInRequestDto authSignInRequestDto) {
-        AuthResponseDto authResponseDto = authRepositoryPort.findByMemberId(authSignInRequestDto.getMemberId()).orElseThrow(
-                () -> new BaseException(BaseResponseStatus.USER_NOT_FOUND)
+        final AuthResponseDto authResponseDto =
+                authRepositoryPort.findByMemberId(authSignInRequestDto.getMemberId())
+                        .orElseThrow(() -> new BaseException(BaseResponseStatus.USER_NOT_FOUND)
         );
 
-        AuthDomain authDomain = authMapper.toAuthDomain(authResponseDto);
+        final AuthDomain authDomain = authMapper.toAuthDomain(authResponseDto);
 
-        return authSecurityPort.signIn(
+        final SignInResponseDto signInResponseDto = authSecurityPort.signIn(
                 authMapper.toSignInDto(authDomain), authSignInRequestDto.getPassword()
         );
+
+        tokenStorePort.saveRefreshToken(
+                authMapper.toStoreRefreshTokenDto(authDomain.getMemberUuid(), signInResponseDto.getRefreshToken())
+        );
+
+        return signInResponseDto;
     }
 
+    @Override
+    @Transactional
+    public SignInResponseDto reissueAllToken(ReissueAllTokenRequestDto reissueAllTokenRequestDto) {
+        final String memberUuid = authSecurityPort.getMemberUuidByToken(reissueAllTokenRequestDto.getRefreshToken());
+
+        if (!tokenStorePort.getRefreshToken(memberUuid)
+                .equals(reissueAllTokenRequestDto.getRefreshToken())
+        ) {
+            System.out.println("refresh" + tokenStorePort.getRefreshToken(memberUuid));
+            throw  new BaseException(BaseResponseStatus.INVALID_REFRESH_TOKEN);
+        }
+
+        final SignInResponseDto tokens = authSecurityPort.generateAllToken(memberUuid);
+
+        tokenStorePort.saveRefreshToken(authMapper.toStoreRefreshTokenDto(memberUuid, tokens.getRefreshToken()));
+
+        return tokens;
+    }
+
+    @Override
+    @Transactional
+    public void signOut(SignOutDto signOutDto) {
+        try {
+            final String memberUuid = authSecurityPort.getMemberUuidByToken(signOutDto.getRefreshToken());
+
+            tokenStorePort.deleteRefreshToken(memberUuid);
+        } catch (BaseException e) { }
+    }
 }
