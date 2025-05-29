@@ -7,6 +7,7 @@ import com.chalnakchalnak.authservice.adapter.in.web.vo.in.*;
 import com.chalnakchalnak.authservice.adapter.in.web.vo.out.SignInResponseVo;
 import com.chalnakchalnak.authservice.application.port.in.AuthUseCase;
 import com.chalnakchalnak.authservice.common.response.BaseResponseStatus;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ public class AuthController {
     private final AuthUseCase authUseCase;
     private final AuthVoMapper authVoMapper;
 
+    @Operation(summary = "Sign Up API", description = "회원가입", tags = {"Auth-service"})
     @PostMapping("/sign-up")
     public BaseResponseEntity<Void> signUp(@RequestBody @Valid SignUpRequestVo signUpRequestVo) {
 
@@ -27,6 +29,7 @@ public class AuthController {
         return new BaseResponseEntity<>(BaseResponseStatus.SUCCESS_SIGN_UP);
     }
 
+    @Operation(summary = "Check Member ID API", description = "회원 아이디 중복 확인", tags = {"Auth-service"})
     @PostMapping("/exists/member-id/{memberId}")
     public BaseResponseEntity<Boolean> existsMemberId(
             @PathVariable("memberId") String memberId
@@ -47,6 +50,7 @@ public class AuthController {
 //        );
 //    }
 
+    @Operation(summary = "Check Nickname API", description = "닉네임 중복 확인", tags = {"Auth-service"})
     @PostMapping("/exists/phone-number/{phoneNumber}")
     public BaseResponseEntity<Boolean> existsPhoneNumber(
             @PathVariable("phoneNumber") String phoneNumber
@@ -57,6 +61,7 @@ public class AuthController {
         );
     }
 
+    @Operation(summary = "Sign In API", description = "로그인", tags = {"Auth-service"})
     @PostMapping("/sign-in")
     public BaseResponseEntity<SignInResponseVo> signIn(
             @RequestBody @Valid SignInRequestVo signInRequestVo
@@ -67,6 +72,7 @@ public class AuthController {
         );
     }
 
+    @Operation(summary = "Reissue Token API", description = "토큰 재발급", tags = {"Auth-service"})
     @GetMapping("/reissue")
     public BaseResponseEntity<SignInResponseVo> reissueAllToken(
             @RequestHeader("Authorization") String refreshToken
@@ -78,6 +84,7 @@ public class AuthController {
         );
     }
 
+    @Operation(summary = "Sign Out API", description = "로그아웃", tags = {"Auth-service"})
     @GetMapping("/sign-out")
     public BaseResponseEntity<Void> signOut(
             @RequestHeader("Authorization") String refreshToken
