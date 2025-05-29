@@ -17,14 +17,14 @@ public class AuthController {
     private final AuthUseCase authUseCase;
     private final AuthVoMapper authVoMapper;
 
-    @Operation(summary = "Sign Up API", description = "회원가입", tags = {"Auth-service"})
+    @Operation(summary = "Sign Up API", description = "회원가입", tags = {"auth"})
     @PostMapping("/sign-up")
     public void signUp(@RequestBody @Valid SignUpRequestVo signUpRequestVo) {
 
         authUseCase.signUp(authVoMapper.toSignUpRequestDto(signUpRequestVo));
     }
 
-    @Operation(summary = "Check Member ID API", description = "회원 아이디 중복 확인", tags = {"Auth-service"})
+    @Operation(summary = "Check Member ID API", description = "회원 아이디 중복 확인", tags = {"auth"})
     @PostMapping("/exists/member-id/{memberId}")
     public Boolean existsMemberId(
             @PathVariable("memberId") String memberId
@@ -43,7 +43,7 @@ public class AuthController {
 //        );
 //    }
 
-    @Operation(summary = "Check Nickname API", description = "닉네임 중복 확인", tags = {"Auth-service"})
+    @Operation(summary = "Check Nickname API", description = "닉네임 중복 확인", tags = {"auth"})
     @PostMapping("/exists/phone-number/{phoneNumber}")
     public Boolean existsPhoneNumber(
             @PathVariable("phoneNumber") String phoneNumber
@@ -52,7 +52,7 @@ public class AuthController {
         return authUseCase.existsPhoneNumber(authVoMapper.toExistsPhoneNumberRequestDto(phoneNumber));
     }
 
-    @Operation(summary = "Sign In API", description = "로그인", tags = {"Auth-service"})
+    @Operation(summary = "Sign In API", description = "로그인", tags = {"auth"})
     @PostMapping("/sign-in")
     public SignInResponseVo signIn(
             @RequestBody @Valid SignInRequestVo signInRequestVo
@@ -61,7 +61,7 @@ public class AuthController {
         return authVoMapper.toSignInResponseVo(authUseCase.signIn(authVoMapper.toSignInRequestDto(signInRequestVo)));
     }
 
-    @Operation(summary = "Reissue Token API", description = "토큰 재발급", tags = {"Auth-service"})
+    @Operation(summary = "Reissue Token API", description = "토큰 재발급", tags = {"auth"})
     @GetMapping("/reissue")
     public SignInResponseVo reissueAllToken(
             @RequestHeader("Authorization") String refreshToken
@@ -71,7 +71,7 @@ public class AuthController {
                         authVoMapper.toReissueAllTokenRequestDto(refreshToken.substring(7))));
     }
 
-    @Operation(summary = "Sign Out API", description = "로그아웃", tags = {"Auth-service"})
+    @Operation(summary = "Sign Out API", description = "로그아웃", tags = {"auth"})
     @GetMapping("/sign-out")
     public void signOut(
             @RequestHeader("Authorization") String refreshToken

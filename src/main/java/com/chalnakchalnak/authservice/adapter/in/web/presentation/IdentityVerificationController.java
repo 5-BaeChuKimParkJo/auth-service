@@ -20,7 +20,7 @@ public class IdentityVerificationController {
     private final IdentityVerificationUseCase identityVerificationUseCase;
     private final IdentityVerificationVoMapper identityVerificationVoMapper;
 
-    @Operation(summary = "Send Verification Code API", description = "인증 코드 전송 API", tags = {"Auth-service"})
+    @Operation(summary = "Send Verification Code API", description = "인증 코드 전송 API", tags = {"identity-verification"})
     @PostMapping("/sms/send")
     public void sendVerificationCode(
             @RequestBody @Valid SendVerificationCodeRequestVo sendVerificationCodeRequestVo
@@ -31,7 +31,7 @@ public class IdentityVerificationController {
         );
 }
 
-    @Operation(summary = "Verify Code API", description = "인증 코드 검증 API", tags = {"Auth-service"})
+    @Operation(summary = "Verify Code API", description = "인증 코드 검증 API", tags = {"identity-verification"})
     @PostMapping("/sms/verify")
     public Boolean verifyCode(
             @RequestBody @Valid VerifyCodeRequestVo verifyCodeRequestVo
