@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ExistsPhoneNumberRequestVo {
+public class GetMemberIdRequestVo {
 
     @NotBlank
     @Pattern(

@@ -1,10 +1,13 @@
 package com.chalnakchalnak.authservice.application.service;
 
+import com.chalnakchalnak.authservice.application.mapper.feign.MemberMapper;
 import com.chalnakchalnak.authservice.application.port.dto.SignOutDto;
 import com.chalnakchalnak.authservice.application.port.dto.in.*;
 import com.chalnakchalnak.authservice.application.port.dto.out.AuthResponseDto;
+import com.chalnakchalnak.authservice.application.port.dto.out.GetMemberIdResponseDto;
 import com.chalnakchalnak.authservice.application.port.dto.out.SignInResponseDto;
 import com.chalnakchalnak.authservice.application.port.out.*;
+import com.chalnakchalnak.authservice.application.port.out.feign.member.MemberServicePort;
 import com.chalnakchalnak.authservice.domain.model.enums.IdentityVerificationPurpose;
 import com.chalnakchalnak.authservice.application.mapper.AuthMapper;
 import com.chalnakchalnak.authservice.application.port.in.AuthUseCase;
@@ -24,9 +27,9 @@ public class AuthService implements AuthUseCase {
     private final GenerateUuidPort generateUuidPort;
     private final VerificationCodeStorePort verificationCodeStorePort;
     private final TokenStorePort tokenStorePort;
+    private final MemberServicePort memberServicePort;
     private final AuthMapper authMapper;
-//    private final MemberServicePort memberServicePort;
-//    private final MemberMapper memberMapper;
+    private final MemberMapper memberMapper;
 
     @Override
     @Transactional
@@ -40,8 +43,8 @@ public class AuthService implements AuthUseCase {
 
         if(authRepositoryPort.existsByMemberId(signUpRequestDto.getMemberId())) {
             throw new BaseException(BaseResponseStatus.DUPLICATED_MEMBER_ID);
-//        } else if (memberServicePort.existsNickname(signUpRequestDto.getNickname())) {
-//            throw new BaseException(BaseResponseStatus.DUPLICATED_NICKNAME);
+        } else if (memberServicePort.existsByNickname(signUpRequestDto.getNickname())) {
+            throw new BaseException(BaseResponseStatus.DUPLICATED_NICKNAME);
         } else if (authRepositoryPort.existsByPhoneNumber(signUpRequestDto.getPhoneNumber())) {
             throw new BaseException(BaseResponseStatus.DUPLICATED_PHONE_NUMBER);
         }
@@ -55,7 +58,7 @@ public class AuthService implements AuthUseCase {
         authRepositoryPort.save(authMapper.toSignUpDto(authDomain));
 
         // member-service로 member 생성 요청 (feign client)
-//        memberServicePort.createMember(memberMapper.toCreateMemberRequestDto(authDomain));
+        memberServicePort.createMember(memberMapper.toCreateMemberRequestDto(authDomain));
     }
 
     @Override
@@ -63,10 +66,10 @@ public class AuthService implements AuthUseCase {
         return authRepositoryPort.existsByMemberId(existsMemberIdRequestDto.getMemberId());
     }
 
-//    @Override
-//    public Boolean existsNickname(ExistsNicknameRequestDto existsNicknameRequestDto) {
-//        return authRepositoryPort.existsByNickname(existsNicknameRequestDto.getNickname());
-//    }
+    @Override
+    public Boolean existsNickname(ExistsNicknameRequestDto existsNicknameRequestDto) {
+        return memberServicePort.existsByNickname(existsNicknameRequestDto.getNickname());
+    }
 
     @Override
     public Boolean existsPhoneNumber(ExistsPhoneNumberRequestDto existsPhoneNumberRequestDto) {
@@ -79,7 +82,7 @@ public class AuthService implements AuthUseCase {
         final AuthResponseDto authResponseDto =
                 authRepositoryPort.findByMemberId(authSignInRequestDto.getMemberId())
                         .orElseThrow(() -> new BaseException(BaseResponseStatus.USER_NOT_FOUND)
-        );
+                        );
 
         final AuthDomain authDomain = authMapper.toAuthDomain(authResponseDto);
 
@@ -122,4 +125,34 @@ public class AuthService implements AuthUseCase {
             tokenStorePort.deleteRefreshToken(memberUuid);
         } catch (BaseException e) { }
     }
+
+    @Override
+    public GetMemberIdResponseDto getMemberId(GetMemberIdRequestDto getMemberIdRequestDto) {
+        if (!verificationCodeStorePort.grantedAccess(
+                getMemberIdRequestDto.getPhoneNumber(), IdentityVerificationPurpose.FIND_ID.toString())
+        ) {
+            throw new BaseException(BaseResponseStatus.FIND_MEMBER_ID_NOT_VERIFIED);
+        }
+
+        return authRepositoryPort.findMemberIdByPhoneNumber(authMapper.toGetMemberIdDto(getMemberIdRequestDto));
+    }
+
+    @Override
+    public void resetPassword(ResetPasswordRequestDto resetPasswordRequestDto) {
+        if (!verificationCodeStorePort.grantedAccess(
+                resetPasswordRequestDto.getPhoneNumber(), IdentityVerificationPurpose.PASSWORD_RESET.toString())
+        ) {
+            throw new BaseException(BaseResponseStatus.RESET_PASSWORD_NOT_VERIFIED);
+        }
+
+        if (!resetPasswordRequestDto.getNewPassword().equals(resetPasswordRequestDto.getConfirmPassword())) {
+            throw new BaseException(BaseResponseStatus.PASSWORD_NOT_MATCH);
+        }
+
+        authRepositoryPort.resetPassword(
+                resetPasswordRequestDto.getPhoneNumber(),
+                authSecurityPort.encryptPassword(resetPasswordRequestDto.getNewPassword())
+        );
+    }
+
 }

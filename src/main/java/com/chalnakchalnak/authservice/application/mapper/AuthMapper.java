@@ -1,8 +1,10 @@
 package com.chalnakchalnak.authservice.application.mapper;
 
+import com.chalnakchalnak.authservice.application.port.dto.GetMemberIdDto;
 import com.chalnakchalnak.authservice.application.port.dto.SignInDto;
 import com.chalnakchalnak.authservice.application.port.dto.SignUpDto;
 import com.chalnakchalnak.authservice.application.port.dto.StoreRefreshTokenDto;
+import com.chalnakchalnak.authservice.application.port.dto.in.GetMemberIdRequestDto;
 import com.chalnakchalnak.authservice.application.port.dto.in.SignUpRequestDto;
 import com.chalnakchalnak.authservice.application.port.dto.out.AuthResponseDto;
 import com.chalnakchalnak.authservice.application.port.dto.out.SignInResponseDto;
@@ -60,6 +62,12 @@ public class AuthMapper {
         return StoreRefreshTokenDto.builder()
                 .memberUuid(memberUuid)
                 .refreshToken(refreshToken)
+                .build();
+    }
+
+    public GetMemberIdDto toGetMemberIdDto(GetMemberIdRequestDto getMemberIdRequestDto) {
+        return GetMemberIdDto.builder()
+                .phoneNumber(getMemberIdRequestDto.getPhoneNumber())
                 .build();
     }
 
