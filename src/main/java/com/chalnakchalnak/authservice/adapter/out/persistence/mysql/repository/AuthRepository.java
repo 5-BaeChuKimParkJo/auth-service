@@ -1,9 +1,15 @@
 package com.chalnakchalnak.authservice.adapter.out.persistence.mysql.repository;
 
+import com.chalnakchalnak.authservice.adapter.out.persistence.mysql.entity.AuthEntity;
 import com.chalnakchalnak.authservice.adapter.out.persistence.mysql.mapper.AuthEntityMapper;
+import com.chalnakchalnak.authservice.application.port.dto.GetMemberIdDto;
 import com.chalnakchalnak.authservice.application.port.dto.SignUpDto;
 import com.chalnakchalnak.authservice.application.port.dto.out.AuthResponseDto;
+import com.chalnakchalnak.authservice.application.port.dto.out.GetMemberIdResponseDto;
 import com.chalnakchalnak.authservice.application.port.out.AuthRepositoryPort;
+import com.chalnakchalnak.authservice.common.exception.BaseException;
+import com.chalnakchalnak.authservice.common.response.BaseResponseStatus;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -33,11 +39,30 @@ public class AuthRepository implements AuthRepositoryPort {
 
     @Override
     public Boolean existsByPhoneNumber(String phoneNumber) {
+
         return authJpaRepository.existsByPhoneNumber(phoneNumber);
     }
 
     @Override
     public Optional<AuthResponseDto> findByMemberId(String memberId) {
+
         return Optional.ofNullable(authEntityMapper.toAuthResponseDto(authJpaRepository.findByMemberId(memberId)));
+    }
+
+    @Override
+    public GetMemberIdResponseDto findMemberIdByPhoneNumber(GetMemberIdDto getMemberIdDto) {
+
+        return authEntityMapper.toGetMemberIdResponseDto(
+                authJpaRepository.findMemberIdByPhoneNumber(getMemberIdDto.getPhoneNumber())
+        );
+    }
+
+    @Override
+    @Transactional
+    public void resetPassword(String phoneNumber, String encryptedPassword) {
+        AuthEntity authEntity = authJpaRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new BaseException(BaseResponseStatus.USER_NOT_FOUND));
+
+        authEntity.resetPassword(encryptedPassword);
     }
 }

@@ -3,6 +3,7 @@ package com.chalnakchalnak.authservice.adapter.out.persistence.mysql.mapper;
 import com.chalnakchalnak.authservice.adapter.out.persistence.mysql.entity.AuthEntity;
 import com.chalnakchalnak.authservice.application.port.dto.SignUpDto;
 import com.chalnakchalnak.authservice.application.port.dto.out.AuthResponseDto;
+import com.chalnakchalnak.authservice.application.port.dto.out.GetMemberIdResponseDto;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,6 +26,12 @@ public class AuthEntityMapper {
                 .phoneNumber(authEntity.getPhoneNumber())
                 .createdAt(authEntity.getCreatedAt())
                 .updatedAt(authEntity.getUpdatedAt())
+                .build();
+    }
+
+    public GetMemberIdResponseDto toGetMemberIdResponseDto(AuthEntity authEntity) {
+        return GetMemberIdResponseDto.builder()
+                .memberId(authEntity.getMemberId())
                 .build();
     }
 }

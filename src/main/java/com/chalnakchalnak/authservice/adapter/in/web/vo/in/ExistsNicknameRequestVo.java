@@ -2,9 +2,11 @@ package com.chalnakchalnak.authservice.adapter.in.web.vo.in;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public class ExistsNicknameRequestVo {
 
     @NotBlank

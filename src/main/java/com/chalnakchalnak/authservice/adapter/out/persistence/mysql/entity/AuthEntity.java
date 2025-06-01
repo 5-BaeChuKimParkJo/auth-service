@@ -38,4 +38,8 @@ public class AuthEntity extends BaseEntity {
         this.password = password;
         this.phoneNumber = phoneNumber;
     }
+
+    public void resetPassword(String password) {
+        this.password = password;
+    }
 }

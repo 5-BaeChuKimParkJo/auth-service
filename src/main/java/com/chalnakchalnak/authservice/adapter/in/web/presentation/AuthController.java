@@ -2,7 +2,9 @@ package com.chalnakchalnak.authservice.adapter.in.web.presentation;
 
 import com.chalnakchalnak.authservice.adapter.in.web.mapper.AuthVoMapper;
 import com.chalnakchalnak.authservice.adapter.in.web.vo.in.*;
+import com.chalnakchalnak.authservice.adapter.in.web.vo.out.GetMemberIdResponseVo;
 import com.chalnakchalnak.authservice.adapter.in.web.vo.out.SignInResponseVo;
+import com.chalnakchalnak.authservice.application.port.dto.out.GetMemberIdResponseDto;
 import com.chalnakchalnak.authservice.application.port.in.AuthUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -25,31 +27,36 @@ public class AuthController {
     }
 
     @Operation(summary = "Check Member ID API", description = "회원 아이디 중복 확인", tags = {"auth"})
-    @GetMapping("/exists/member-id/{memberId}")
+    @GetMapping("/exists/member-id")
     public Boolean existsMemberId(
-            @PathVariable("memberId") String memberId
+            @ModelAttribute @Valid ExistsMemberIdRequestVo existsMemberIdRequestVo
     ) {
 
-        return authUseCase.existsMemberId(authVoMapper.toExistsMemberIdRequestDto(memberId));
+        return authUseCase.existsMemberId(
+                authVoMapper.toExistsMemberIdRequestDto(existsMemberIdRequestVo)
+        );
     }
 
-//    @GetMapping("/exists/nickname")
-//    public BaseResponseEntity<Boolean> existsNickname(
-//            @RequestBody @Valid ExistsNicknameRequestVo existsNicknameRequestVo
-//    ) {
-//
-//        return new BaseResponseEntity<>(authUseCase.existsNickname(
-//                authVoMapper.toExistsNicknameRequestDto(existsNicknameRequestVo))
-//        );
-//    }
-
     @Operation(summary = "Check Nickname API", description = "닉네임 중복 확인", tags = {"auth"})
-    @GetMapping("/exists/phone-number/{phoneNumber}")
-    public Boolean existsPhoneNumber(
-            @PathVariable("phoneNumber") String phoneNumber
+    @GetMapping("/exists/nickname")
+    public Boolean existsNickname(
+            @ModelAttribute @Valid ExistsNicknameRequestVo existsNicknameRequestVo
     ) {
 
-        return authUseCase.existsPhoneNumber(authVoMapper.toExistsPhoneNumberRequestDto(phoneNumber));
+        return authUseCase.existsNickname(
+                authVoMapper.toExistsNicknameRequestDto(existsNicknameRequestVo)
+        );
+    }
+
+    @Operation(summary = "Check PhoneNumber API", description = "전화번호 중복 확인", tags = {"auth"})
+    @GetMapping("/exists/phone-number")
+    public Boolean existsPhoneNumber(
+            @ModelAttribute @Valid ExistsPhoneNumberRequestVo existsMemberIdRequestVo
+    ) {
+
+        return authUseCase.existsPhoneNumber(
+                authVoMapper.toExistsPhoneNumberRequestDto(existsMemberIdRequestVo)
+        );
     }
 
     @Operation(summary = "Sign In API", description = "로그인", tags = {"auth"})
@@ -58,7 +65,11 @@ public class AuthController {
             @RequestBody @Valid SignInRequestVo signInRequestVo
             ) {
 
-        return authVoMapper.toSignInResponseVo(authUseCase.signIn(authVoMapper.toSignInRequestDto(signInRequestVo)));
+        return authVoMapper.toSignInResponseVo(
+                authUseCase.signIn(
+                        authVoMapper.toSignInRequestDto(signInRequestVo)
+                )
+        );
     }
 
     @Operation(summary = "Reissue Token API", description = "토큰 재발급", tags = {"auth"})
@@ -68,7 +79,10 @@ public class AuthController {
     ) {
 
         return authVoMapper.toSignInResponseVo(authUseCase.reissueAllToken(
-                        authVoMapper.toReissueAllTokenRequestDto(refreshToken.substring(7))));
+                        authVoMapper.toReissueAllTokenRequestDto(
+                                refreshToken.substring(7))
+                )
+        );
     }
 
     @Operation(summary = "Sign Out API", description = "로그아웃", tags = {"auth"})
@@ -77,6 +91,32 @@ public class AuthController {
             @RequestHeader("Authorization") String refreshToken
     ) {
 
-        authUseCase.signOut(authVoMapper.toSignOutDto(refreshToken.substring(7)));
+        authUseCase.signOut(
+                authVoMapper.toSignOutDto(refreshToken.substring(7))
+        );
+    }
+
+    @Operation(summary = "Find Member ID API", description = "회원 아이디 찾기", tags = {"auth"})
+    @GetMapping("/member-id")
+    public GetMemberIdResponseVo findMemberId(
+            @ModelAttribute @Valid GetMemberIdRequestVo getMemberIdRequestVo
+    ) {
+
+        return authVoMapper.toGetMemberIdResponseVo(
+                authUseCase.getMemberId(
+                        authVoMapper.toGetMemberIdRequestDto(getMemberIdRequestVo)
+                )
+        );
+    }
+
+    @Operation(summary = "Reest Password API", description = "비밀번호 재설정", tags = {"auth"})
+    @PatchMapping("/password")
+    public void resetPassword(
+            @RequestBody @Valid ResetPasswordRequestVo resetPasswordRequestVo
+    ) {
+
+        authUseCase.resetPassword(
+                authVoMapper.toResetPasswordRequestDto(resetPasswordRequestVo)
+        );
     }
 }

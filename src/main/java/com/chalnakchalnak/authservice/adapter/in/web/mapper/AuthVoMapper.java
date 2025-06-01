@@ -1,9 +1,12 @@
 package com.chalnakchalnak.authservice.adapter.in.web.mapper;
 
 import com.chalnakchalnak.authservice.adapter.in.web.vo.in.*;
+import com.chalnakchalnak.authservice.adapter.in.web.vo.out.GetMemberIdResponseVo;
 import com.chalnakchalnak.authservice.adapter.in.web.vo.out.SignInResponseVo;
 import com.chalnakchalnak.authservice.application.port.dto.SignOutDto;
 import com.chalnakchalnak.authservice.application.port.dto.in.*;
+import com.chalnakchalnak.authservice.application.port.dto.in.GetMemberIdRequestDto;
+import com.chalnakchalnak.authservice.application.port.dto.out.GetMemberIdResponseDto;
 import com.chalnakchalnak.authservice.application.port.dto.out.SignInResponseDto;
 import org.springframework.stereotype.Component;
 
@@ -19,21 +22,21 @@ public class AuthVoMapper {
                 .build();
     }
 
-    public ExistsMemberIdRequestDto toExistsMemberIdRequestDto(String MemberId) {
+    public ExistsMemberIdRequestDto toExistsMemberIdRequestDto(ExistsMemberIdRequestVo existsMemberIdRequestVo) {
         return ExistsMemberIdRequestDto.builder()
-                .memberId(MemberId)
+                .memberId(existsMemberIdRequestVo.getMemberId())
                 .build();
     }
 
-//    public ExistsNicknameRequestDto toExistsNicknameRequestDto(ExistsNicknameRequestVo existsNicknameRequestVo) {
-//        return ExistsNicknameRequestDto.builder()
-//                .nickname(existsNicknameRequestVo.getNickname())
-//                .build();
-//    }
+    public ExistsNicknameRequestDto toExistsNicknameRequestDto(ExistsNicknameRequestVo existsNicknameRequestVo) {
+        return ExistsNicknameRequestDto.builder()
+                .nickname(existsNicknameRequestVo.getNickname())
+                .build();
+    }
 
-    public ExistsPhoneNumberRequestDto toExistsPhoneNumberRequestDto(String phoneNumber) {
+    public ExistsPhoneNumberRequestDto toExistsPhoneNumberRequestDto(ExistsPhoneNumberRequestVo existsPhoneNumberRequestVo) {
         return ExistsPhoneNumberRequestDto.builder()
-                .phoneNumber(phoneNumber)
+                .phoneNumber(existsPhoneNumberRequestVo.getPhoneNumber())
                 .build();
     }
 
@@ -60,6 +63,26 @@ public class AuthVoMapper {
     public SignOutDto toSignOutDto(String refreshToken) {
         return SignOutDto.builder()
                 .refreshToken(refreshToken)
+                .build();
+    }
+
+    public GetMemberIdRequestDto toGetMemberIdRequestDto(GetMemberIdRequestVo getMemberIdRequestVo) {
+        return GetMemberIdRequestDto.builder()
+                .phoneNumber(getMemberIdRequestVo.getPhoneNumber())
+                .build();
+    }
+
+    public GetMemberIdResponseVo toGetMemberIdResponseVo(GetMemberIdResponseDto getMemberIdResponseDto) {
+        return GetMemberIdResponseVo.builder()
+                .memberId(getMemberIdResponseDto.getMemberId())
+                .build();
+    }
+
+    public ResetPasswordRequestDto toResetPasswordRequestDto(ResetPasswordRequestVo resetPasswordRequestVo) {
+        return ResetPasswordRequestDto.builder()
+                .phoneNumber(resetPasswordRequestVo.getPhoneNumber())
+                .newPassword(resetPasswordRequestVo.getNewPassword())
+                .confirmPassword(resetPasswordRequestVo.getConfirmPassword())
                 .build();
     }
 }

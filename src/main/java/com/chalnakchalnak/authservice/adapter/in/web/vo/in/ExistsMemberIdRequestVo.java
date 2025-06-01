@@ -2,9 +2,11 @@ package com.chalnakchalnak.authservice.adapter.in.web.vo.in;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public class ExistsMemberIdRequestVo {
 
     @NotBlank(message = "memberId 는 필수 값입니다.")
