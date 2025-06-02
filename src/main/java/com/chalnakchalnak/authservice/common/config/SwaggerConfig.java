@@ -13,11 +13,11 @@ import org.springframework.context.annotation.Profile;
                 version = "v1",
                 description = "Auth 서비스"
         ), security = {
-        @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "Bearer Auth")
+        @io.swagger.v3.oas.annotations.security.SecurityRequirement(name = "Authorization")
 }
 )
 
-@Profile("!prod")
+// @Profile("!prod")
 @Configuration
 public class SwaggerConfig {
 
