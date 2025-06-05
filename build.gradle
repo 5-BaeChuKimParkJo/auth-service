@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-//    id 'org.springframework.boot' version '3.4.5'
-    id 'org.springframework.boot' version '3.1.8'
+    id 'org.springframework.boot' version '3.4.1'
+//    id 'org.springframework.boot' version '3.1.8'
     id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -37,15 +37,15 @@ dependencies {
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.12.5'
     implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.12.5'
     implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.12.5'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+    //swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
     //coolsms
     implementation 'net.nurigo:sdk:4.3.2'
     //feign client
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     //actuator
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    //	swagger
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
+
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
@@ -61,7 +61,7 @@ tasks.named('test') {
 
 dependencyManagement {
     imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2022.0.4"
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2024.0.1"
     }
 }
 
