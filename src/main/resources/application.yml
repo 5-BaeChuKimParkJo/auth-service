@@ -48,8 +48,8 @@ management:
 
 springdoc:
   api-docs:
-    path: /auth-service/v3/api-docs
+    path: /v3/api-docs
   swagger-ui:
     enabled: true
-    path: /auth-service/swagger-ui
-    config-url: /auth-service/v3/api-docs/swagger-config
+    path: /swagger-ui
+    config-url: /v3/api-docs/swagger-config
