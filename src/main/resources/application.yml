@@ -51,4 +51,4 @@ springdoc:
     path: /auth-service/v3/api-docs
   swagger-ui:
     enabled: true
-    path: /swagger-ui/index.html
+    # path: /swagger-ui/index.html
