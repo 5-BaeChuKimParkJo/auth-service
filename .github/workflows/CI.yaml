@@ -3,13 +3,13 @@ name: CI
 on:
   push:
     branches:
-      - develop
+      - BVFH-91-develop
       
 
 env:
   AWS_REGION: ap-northeast-2
-  ECR_REPOSITORY: cabbage/{}-service   ### 각자 서비스명에 수정 필요
-  SERVICE_NAME: search-service
+  ECR_REPOSITORY: cabbage/auth-service
+  SERVICE_NAME: auth-service
 
 jobs:
   build:
@@ -22,8 +22,8 @@ jobs:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v2
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}  ### 레포지토리에 액세스키 시크릿 추가
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }} ### 레포지토리에 비밀키 시크릿 추가
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
     - name: Login to Amazon ECR
