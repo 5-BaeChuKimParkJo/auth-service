@@ -8,12 +8,10 @@ public class ResetPasswordRequestDto {
 
     private String phoneNumber;
     private String newPassword;
-    private String confirmPassword;
 
     @Builder
-    public ResetPasswordRequestDto(String phoneNumber, String newPassword, String confirmPassword) {
+    public ResetPasswordRequestDto(String phoneNumber, String newPassword) {
         this.phoneNumber = phoneNumber;
         this.newPassword = newPassword;
-        this.confirmPassword = confirmPassword;
     }
 }

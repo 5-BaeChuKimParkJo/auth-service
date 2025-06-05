@@ -14,9 +14,9 @@ import com.chalnakchalnak.authservice.application.port.in.AuthUseCase;
 import com.chalnakchalnak.authservice.common.exception.BaseException;
 import com.chalnakchalnak.authservice.common.response.BaseResponseStatus;
 import com.chalnakchalnak.authservice.domain.model.AuthDomain;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -143,10 +143,6 @@ public class AuthService implements AuthUseCase {
                 resetPasswordRequestDto.getPhoneNumber(), IdentityVerificationPurpose.PASSWORD_RESET.toString())
         ) {
             throw new BaseException(BaseResponseStatus.RESET_PASSWORD_NOT_VERIFIED);
-        }
-
-        if (!resetPasswordRequestDto.getNewPassword().equals(resetPasswordRequestDto.getConfirmPassword())) {
-            throw new BaseException(BaseResponseStatus.PASSWORD_NOT_MATCH);
         }
 
         authRepositoryPort.resetPassword(

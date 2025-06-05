@@ -82,7 +82,6 @@ public class AuthVoMapper {
         return ResetPasswordRequestDto.builder()
                 .phoneNumber(resetPasswordRequestVo.getPhoneNumber())
                 .newPassword(resetPasswordRequestVo.getNewPassword())
-                .confirmPassword(resetPasswordRequestVo.getConfirmPassword())
                 .build();
     }
 }
