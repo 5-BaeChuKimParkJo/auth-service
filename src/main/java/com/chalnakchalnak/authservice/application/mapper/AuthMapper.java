@@ -1,0 +1,74 @@
+package com.chalnakchalnak.authservice.application.mapper;
+
+import com.chalnakchalnak.authservice.application.port.dto.GetMemberIdDto;
+import com.chalnakchalnak.authservice.application.port.dto.SignInDto;
+import com.chalnakchalnak.authservice.application.port.dto.SignUpDto;
+import com.chalnakchalnak.authservice.application.port.dto.StoreRefreshTokenDto;
+import com.chalnakchalnak.authservice.application.port.dto.in.GetMemberIdRequestDto;
+import com.chalnakchalnak.authservice.application.port.dto.in.SignUpRequestDto;
+import com.chalnakchalnak.authservice.application.port.dto.out.AuthResponseDto;
+import com.chalnakchalnak.authservice.application.port.dto.out.SignInResponseDto;
+import com.chalnakchalnak.authservice.domain.model.AuthDomain;
+import org.springframework.stereotype.Component;
+
+@Component
+public class AuthMapper {
+
+    public AuthDomain toAuthDomain(SignUpRequestDto signUpRequestDto, String uuid, String hashedPassword) {
+        return AuthDomain.builder()
+                .memberUuid(uuid)
+                .memberId(signUpRequestDto.getMemberId())
+                .password(hashedPassword)
+                .nickname(signUpRequestDto.getNickname())
+                .phoneNumber(signUpRequestDto.getPhoneNumber())
+                .build();
+    }
+
+    public AuthDomain toAuthDomain(AuthResponseDto authResponseDto) {
+        return AuthDomain.builder()
+                .memberUuid(authResponseDto.getMemberUuid())
+                .memberId(authResponseDto.getMemberId())
+                .password(authResponseDto.getPassword())
+                .nickname("")
+                .phoneNumber(authResponseDto.getPhoneNumber())
+                .build();
+    }
+
+    public SignUpDto toSignUpDto(AuthDomain authDomain) {
+        return SignUpDto.builder()
+                .memberUuid(authDomain.getMemberUuid())
+                .memberId(authDomain.getMemberId())
+                .password(authDomain.getPassword())
+                .phoneNumber(authDomain.getPhoneNumber())
+                .build();
+    }
+
+    public SignInDto toSignInDto(AuthDomain authDomain) {
+        return SignInDto.builder()
+                .memberUuid(authDomain.getMemberUuid())
+                .memberId(authDomain.getMemberId())
+                .password(authDomain.getPassword())
+                .build();
+    }
+
+    public SignInResponseDto toSignInResponseDto(String accessToken, String refreshToken) {
+        return SignInResponseDto.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    public StoreRefreshTokenDto toStoreRefreshTokenDto(String memberUuid, String refreshToken) {
+        return StoreRefreshTokenDto.builder()
+                .memberUuid(memberUuid)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    public GetMemberIdDto toGetMemberIdDto(GetMemberIdRequestDto getMemberIdRequestDto) {
+        return GetMemberIdDto.builder()
+                .phoneNumber(getMemberIdRequestDto.getPhoneNumber())
+                .build();
+    }
+
+}

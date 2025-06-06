@@ -1,6 +1,7 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.4.5'
+    id 'org.springframework.boot' version '3.4.1'
+//    id 'org.springframework.boot' version '3.1.8'
     id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -24,11 +25,28 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    //jpa
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    //redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    //spring security
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    //jwt
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.12.5'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.12.5'
+    implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.12.5'
+    //swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
+    //coolsms
+    implementation 'net.nurigo:sdk:4.3.2'
+    //feign client
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+    //actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
@@ -40,3 +58,12 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2024.0.1"
+    }
+}
+
+
+

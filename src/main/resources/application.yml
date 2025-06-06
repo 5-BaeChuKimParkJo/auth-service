@@ -1,0 +1,55 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: auth-service
+
+  datasource:
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:cabbage123456!}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT}
+      password: ${REDIS_PASSWORD}
+
+coolsms:
+  api-key: ${COOLSMS_API_KEY}
+  secret-key: ${COOLSMS_API_SECRET}
+  sender-phone-number: ${COOLSMS_PHONE_NUMBER}
+  domain: https://api.coolsms.co.kr
+
+JWT:
+  secret-key:  ${JWT_SECRET}
+  token:
+    access-expire-time: 604800
+    refresh-expire-time: 1209600
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui
+    config-url: /v3/api-docs/swagger-config

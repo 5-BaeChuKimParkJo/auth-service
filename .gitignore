@@ -11,7 +11,6 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 
 ### Spring ###
-application*.yml
 .env
 logs/
 tmp/
@@ -26,6 +25,9 @@ tmp/
 *.ipr
 *.iws
 out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
 
 # 포함하고 싶은 팀 설정
 !.idea/codeStyles/
