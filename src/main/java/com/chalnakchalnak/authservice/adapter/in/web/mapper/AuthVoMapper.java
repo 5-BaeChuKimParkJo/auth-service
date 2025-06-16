@@ -49,6 +49,7 @@ public class AuthVoMapper {
 
     public SignInResponseVo toSignInResponseVo(SignInResponseDto signInResponseDto) {
         return SignInResponseVo.builder()
+                .memberUuid(signInResponseDto.getMemberUuid())
                 .accessToken(signInResponseDto.getAccessToken())
                 .refreshToken(signInResponseDto.getRefreshToken())
                 .build();
