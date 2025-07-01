@@ -14,7 +14,7 @@ public interface AuthRepositoryPort {
 //    Boolean existsByNickname(String nickname);
     Boolean existsByPhoneNumber(String phoneNumber);
     Optional<AuthResponseDto> findByMemberId(String memberId);
-    GetMemberIdResponseDto findMemberIdByPhoneNumber (GetMemberIdDto getMemberIdDto);
+    Optional<GetMemberIdResponseDto> findMemberIdByPhoneNumber (GetMemberIdDto getMemberIdDto);
     void resetPassword(String phoneNumber, String encryptedPassword);
 
 }

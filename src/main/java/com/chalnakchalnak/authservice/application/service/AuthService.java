@@ -134,7 +134,9 @@ public class AuthService implements AuthUseCase {
             throw new BaseException(BaseResponseStatus.FIND_MEMBER_ID_NOT_VERIFIED);
         }
 
-        return authRepositoryPort.findMemberIdByPhoneNumber(authMapper.toGetMemberIdDto(getMemberIdRequestDto));
+        return authRepositoryPort.findMemberIdByPhoneNumber(
+                authMapper.toGetMemberIdDto(getMemberIdRequestDto)
+        ).orElseThrow(() -> new BaseException(BaseResponseStatus.USER_NOT_FOUND));
     }
 
     @Override
