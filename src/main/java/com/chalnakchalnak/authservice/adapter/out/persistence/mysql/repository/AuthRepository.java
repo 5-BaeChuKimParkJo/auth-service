@@ -46,15 +46,15 @@ public class AuthRepository implements AuthRepositoryPort {
     @Override
     public Optional<AuthResponseDto> findByMemberId(String memberId) {
 
-        return Optional.ofNullable(authEntityMapper.toAuthResponseDto(authJpaRepository.findByMemberId(memberId)));
+        return authJpaRepository.findByMemberId(memberId)
+                .map(authEntityMapper::toAuthResponseDto);
     }
 
     @Override
-    public GetMemberIdResponseDto findMemberIdByPhoneNumber(GetMemberIdDto getMemberIdDto) {
+    public Optional<GetMemberIdResponseDto> findMemberIdByPhoneNumber(GetMemberIdDto getMemberIdDto) {
 
-        return authEntityMapper.toGetMemberIdResponseDto(
-                authJpaRepository.findMemberIdByPhoneNumber(getMemberIdDto.getPhoneNumber())
-        );
+        return authJpaRepository.findMemberIdByPhoneNumber(getMemberIdDto.getPhoneNumber())
+                .map(authEntityMapper::toGetMemberIdResponseDto);
     }
 
     @Override

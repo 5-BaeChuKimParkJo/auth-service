@@ -9,7 +9,7 @@ public interface AuthJpaRepository extends JpaRepository<AuthEntity, String> {
 
     Boolean existsByMemberId(String memberId);
     Boolean existsByPhoneNumber(String phoneNumber);
-    AuthEntity findByMemberId(String memberId);
-    AuthEntity findMemberIdByPhoneNumber(String phoneNumber);
+    Optional<AuthEntity> findByMemberId(String memberId);
+    Optional<AuthEntity> findMemberIdByPhoneNumber(String phoneNumber);
     Optional<AuthEntity> findByPhoneNumber(String phoneNumber);
 }
