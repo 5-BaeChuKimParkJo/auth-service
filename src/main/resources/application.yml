@@ -32,7 +32,7 @@ coolsms:
   domain: https://api.coolsms.co.kr
 
 JWT:
-  secret-key:  ${JWT_SECRET}
+  secret-key: ${JWT_SECRET}
   token:
     access-expire-time: 604800
     refresh-expire-time: 1209600
