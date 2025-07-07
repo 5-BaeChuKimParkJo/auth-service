@@ -124,8 +124,8 @@ public class JwtTokenProvider {
      */
     public Key getSignKey() {
         String secret = Objects.requireNonNull(env.getProperty("JWT.secret-key"));
-        byte[] decodedKey = Base64.getDecoder().decode(secret);
+//        byte[] decodedKey = Base64.getDecoder().decode(secret);
 
-        return Keys.hmacShaKeyFor(decodedKey);
+        return Keys.hmacShaKeyFor(secret.getBytes());
     }
 }
