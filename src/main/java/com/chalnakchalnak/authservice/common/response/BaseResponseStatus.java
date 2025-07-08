@@ -41,6 +41,11 @@ public enum BaseResponseStatus {
     FIND_MEMBER_ID_NOT_VERIFIED(HttpStatus.UNAUTHORIZED,  4207, "아이디 찾기를 위한 본인 인증을 먼저 진행해주세요."),
     RESET_PASSWORD_NOT_VERIFIED(HttpStatus.UNAUTHORIZED,  4208, "비밀번호 재설정을 위한 본인 인증을 먼저 진행해주세요."),
 
+    /**
+     * 4300~4399: feign client error(member-service)
+     */
+    MEMBER_SERVICE_CREATE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 4300, "member-service 회원 생성 요청에 실패하였습니다."),
+    MEMBER_SERVICE_EXISTS_NICKNAME_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 4301, "member-service 닉네임 중복 확인 요청에 실패하였습니다."),
 
     /**
      * 4900~4999 : 기타 에러

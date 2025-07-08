@@ -9,7 +9,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 //@FeignClient(name = "member-service", url = "http://member-service.default.svc.cluster.local:8080")
-@FeignClient(name = "member-service", path = "api/v1/member", url = "https://api.cabbage-secondhand.shop/member-service")
+@FeignClient(
+        name = "member-service",
+        path = "api/v1/member",
+        url = "https://api.cabbage-secondhand.shop/member-service",
+        fallbackFactory = MemberServiceFallbackFactory.class
+)
 public interface MemberServiceFeignClient extends MemberServicePort {
 
     @PostMapping("/sign-up")
