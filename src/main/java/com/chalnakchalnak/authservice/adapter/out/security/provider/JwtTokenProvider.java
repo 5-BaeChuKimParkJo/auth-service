@@ -68,7 +68,7 @@ public class JwtTokenProvider {
                 .signWith(getSignKey())
                 .claim("token_type", "access")
                 .claim("role", role)
-                .claim("uuid", memberUuid)
+                .claim("memberUuid", memberUuid)
                 .issuedAt(now)
                 .expiration(expiration)
                 .compact();
@@ -88,7 +88,7 @@ public class JwtTokenProvider {
                 .signWith(getSignKey())
                 .claim("token_type", "refresh")
                 .claim("role", role)
-                .claim("uuid", memberUuid)
+                .claim("memberUuid", memberUuid)
                 .issuedAt(now)
                 .expiration(expiration)
                 .compact();
@@ -124,8 +124,8 @@ public class JwtTokenProvider {
      */
     public Key getSignKey() {
         String secret = Objects.requireNonNull(env.getProperty("JWT.secret-key"));
-        byte[] decodedKey = Base64.getDecoder().decode(secret);
+//        byte[] decodedKey = Base64.getDecoder().decode(secret);
 
-        return Keys.hmacShaKeyFor(decodedKey);
+        return Keys.hmacShaKeyFor(secret.getBytes());
     }
 }

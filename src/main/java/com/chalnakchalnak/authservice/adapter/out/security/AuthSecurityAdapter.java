@@ -51,6 +51,7 @@ public class AuthSecurityAdapter implements AuthSecurityPort {
     public SignInResponseDto generateAllToken(String memberUuid) {
 
         return authMapper.toSignInResponseDto(
+                memberUuid,
                 jwtTokenProvider.generateAccessToken("member", memberUuid),
                 jwtTokenProvider.generateRefreshToken("member", memberUuid)
         );

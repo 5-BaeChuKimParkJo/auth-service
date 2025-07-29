@@ -51,8 +51,9 @@ public class AuthMapper {
                 .build();
     }
 
-    public SignInResponseDto toSignInResponseDto(String accessToken, String refreshToken) {
+    public SignInResponseDto toSignInResponseDto(String memberUuid, String accessToken, String refreshToken) {
         return SignInResponseDto.builder()
+                .memberUuid(memberUuid)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();

@@ -7,8 +7,8 @@ spring:
 
   datasource:
     url: ${MYSQL_URL}
-    username: ${MYSQL_USERNAME:root}
-    password: ${MYSQL_PASSWORD:cabbage123456!}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -32,10 +32,15 @@ coolsms:
   domain: https://api.coolsms.co.kr
 
 JWT:
-  secret-key:  ${JWT_SECRET}
+  secret-key: ${JWT_SECRET}
   token:
-    access-expire-time: 604800
-    refresh-expire-time: 1209600
+    access-expire-time: ${ACCESS_TOKEN_EXPIRE_TIME}
+    refresh-expire-time: ${REFRESH_TOKEN_EXPIRE_TIME}
+
+feign:
+  client:
+    member-service:
+      url: ${MEMBER_SERVICE_URL}
 
 management:
   endpoints:
@@ -52,4 +57,5 @@ springdoc:
   swagger-ui:
     enabled: true
     path: /swagger-ui
-    config-url: /v3/api-docs/swagger-config
+    config-url: /auth-service/v3/api-docs/swagger-config
+    url: /auth-service/v3/api-docs
